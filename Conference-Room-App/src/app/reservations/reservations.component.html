@@ -42,29 +42,50 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
-    <form (ngSubmit)="addReservation()">
-      <mat-form-field>
-        <mat-label>Meeting date</mat-label>
-        <input matInput [matDatepicker]="datepicker" [(ngModel)]="value">
-        <mat-datepicker #datepicker/>
-        <mat-datepicker-toggle [for]="datepicker" matSuffix/>
-      </mat-form-field>
-      
-      <mat-form-field>
-        <mat-label>Meeting time</mat-label>
-        <input matInput
-          [matTimepicker]="timepicker"
-          [(ngModel)]="value"
-          [ngModelOptions]="{updateOn: 'blur'}">
-        <mat-timepicker #timepicker/>
-        <mat-timepicker-toggle [for]="timepicker" matSuffix/>
-      </mat-form-field>
-      <button type="submit" class="btn btn-success w-25">Add</button>
-    </form>
+    
     <div class="row justify-content-center align-items-center mt-4">
-        <div class="col-4 justify-content-center align-items-center text-center">
-            <button class="btn btn-success">Add Reservation</button>
-        </div>
+      <div class="col-4 justify-content-center align-items-center text-center">
+          <button *ngIf="!isAdding" class="btn btn-success" (click)="toggleAddReservationForm()">Add Reservation</button>
+          <button *ngIf="isAdding" class="btn btn-primary" (click)="toggleAddReservationForm()">Hide Form</button>
+          <form *ngIf="isAdding" (ngSubmit)="addReservation()" class="mt-4">
+            <mat-form-field>
+              <mat-label>Conference Room</mat-label>
+              <mat-select [(ngModel)]="selectedConferenceRoom" name="selectedConferenceRoom">
+                <mat-option *ngFor="let conferenceRoom of conferenceRoomList" [value]="conferenceRoom">
+                  {{ conferenceRoom.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Participants</mat-label>
+              <mat-select multiple [(ngModel)]="selectedUsers" name="selectedUsers">
+                <mat-option *ngFor="let user of userList" [value]="user">
+                  {{ user.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Meeting date</mat-label>
+              <input matInput [matDatepicker]="datepicker" [(ngModel)]="value" name="value">
+              <mat-datepicker #datepicker/>
+              <mat-datepicker-toggle [for]="datepicker" matSuffix/>
+            </mat-form-field>
+            
+            <mat-form-field>
+              <mat-label>Meeting time</mat-label>
+              <input matInput
+                [matTimepicker]="timepicker"
+                [(ngModel)]="value"
+                [ngModelOptions]="{updateOn: 'blur'}" name="value">
+              <mat-timepicker #timepicker/>
+              <mat-timepicker-toggle [for]="timepicker" matSuffix/>
+            </mat-form-field>
+
+            <button type="submit" class="btn btn-success" (click)="toggleAddReservationForm()">Create Reservation</button>
+          </form>
+      </div>
     </div>
 </div>
 

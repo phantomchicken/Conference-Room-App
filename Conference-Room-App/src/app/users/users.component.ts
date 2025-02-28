@@ -36,8 +36,8 @@ export class UsersComponent {
     );
   }
 
-  showAddUserForm() {
-    this.isAdding = true;
+  toggleAddUserForm() {
+    this.isAdding = !this.isAdding
   }
 
   addUser(){
