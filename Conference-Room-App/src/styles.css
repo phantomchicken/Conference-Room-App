@@ -9,3 +9,19 @@ background-color: white !important;
 box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 border-radius: 8px;
 }
+
+/* Fix for Calendar Inside Popup */
+.mat-calendar {
+    background-color: white !important;
+}
+
+/* Ensure Calendar Cells Are Not Transparent */
+.mat-calendar-body-cell {
+    background-color: white !important;
+}
+
+/* Fix Hover and Selected State */
+.mat-calendar-body-cell:hover,
+.mat-calendar-body-selected {
+    background-color: #f0f0f0 !important;
+}

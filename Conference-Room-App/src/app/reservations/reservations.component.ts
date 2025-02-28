@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
+import { ConferenceRoom, Reservation, User } from '../models';
 
 @Component({
   selector: 'app-reservations',
@@ -27,10 +28,10 @@ export class ReservationsComponent {
   isAdding = false;
   
   userList: any[] = [];
-  selectedUsers = [];
+  selectedUsers: User[] = [];
 
   conferenceRoomList: any[] = [];
-  selectedConferenceRoom = null;
+  selectedConferenceRoom: ConferenceRoom | null = null;
 
   constructor(private dbService: DatabaseService) {}
 
@@ -52,10 +53,27 @@ export class ReservationsComponent {
     );
   }
 
-  addReservation(){
-    console.log(this.value);
-    console.log(this.selectedConferenceRoom);
-    console.log(this.selectedUsers);
+  addReservation() {
+    if (!this.selectedConferenceRoom || this.selectedConferenceRoom.id === null || !this.selectedUsers.length || !this.value) {
+      return;
+    }
+    const reservation: Reservation = {
+      conferenceRoomId: this.selectedConferenceRoom.id,
+      participantIds: this.selectedUsers.map(user => user.id),
+      // startDate: this.value
+    };
+  
+    this.dbService.addReservation(reservation).subscribe({
+      next: () => {
+        this.status = 'Reservation added successfully.',
+        this.statusClass = 'alert alert-success',
+        this.dbService.getReservations().subscribe(data => this.dataSource = data)
+      },
+      error: (err) => {
+        this.status = 'Error adding reservation!',
+        this.statusClass = 'alert alert-danger'
+      }
+    });
   }
 
   toggleAddReservationForm() {

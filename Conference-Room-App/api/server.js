@@ -54,16 +54,21 @@ app.get('/reservations', async (req, res) => {
 });
 
 app.post('/reservations', async (req, res) => {
-  const { conferenceRoomId, participantIds } = req.body;
+  const { conferenceRoomId, participantIds} = req.body;
+
+  if (!conferenceRoomId || !participantIds) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
 
   const reservation = await prisma.reservation.create({
     data: {
       conferenceRoom: { connect: { id: conferenceRoomId } },
-      participants: { connect: participantIds.map((id) => ({ id })) }
+      participants: { connect: participantIds.map((id) => ({ id })) },
+      // startDate: new Date(startDate) // Ensure the startDate is saved as a valid Date object
     }
   });
 
-  res.json(reservation);
+  res.status(201).json(reservation);
 });
 
 app.delete('/reservations/:id', async (req, res) => {

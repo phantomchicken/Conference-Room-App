@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { User, ConferenceRoom,Reservation } from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,8 @@ export class DatabaseService {
     return this.http.get(this.API_URL + 'reservations');
   }
 
-  addReservation(name: string): Observable<any> {
-    return this.http.post(this.API_URL + 'reservations', { name });
+  addReservation(reservation: Reservation): Observable<Reservation> {
+    return this.http.post<Reservation>(this.API_URL + 'reservations', reservation );
   }
 
   deleteReservation(id: number): Observable<any> {
