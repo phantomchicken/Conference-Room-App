@@ -1,9 +1,10 @@
-<div class="container-fluid">
-    
+<div class="container">
     <div class="row">
-        <div *ngIf="status" class="alert alert-primary" role="alert">
-            A simple primary alert—check it out!
+      <div *ngIf="status">
+        <div class="alert alert-primary" role="alert">
+          A simple primary alert—check it out!
         </div>
+      </div>      
     </div>
     <div class="row">
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -11,28 +12,33 @@
             <!--- Note that these columns can be defined in any order.
                   The actual rendered columns are set as a property on the row definition" -->
           
-            <!-- Position Column -->
-            <ng-container matColumnDef="position">
-              <th mat-header-cell *matHeaderCellDef> No. </th>
-              <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+            <!-- id Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> Id </th>
+              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
             </ng-container>
           
             <!-- Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef> Name </th>
-              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            <ng-container matColumnDef="conferenceRoom">
+              <th mat-header-cell *matHeaderCellDef> Conference Room </th>
+              <td mat-cell *matCellDef="let element"> {{element.conferenceRoom?.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="participants">
+              <th mat-header-cell *matHeaderCellDef> Participants </th>
+              <td mat-cell *matCellDef="let element"> 
+                <div *ngFor="let participant of element.participants">
+                    {{participant.name}}
+                </div>
+              </td>
             </ng-container>
           
-            <!-- Weight Column -->
-            <ng-container matColumnDef="weight">
-              <th mat-header-cell *matHeaderCellDef> Weight </th>
-              <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
-            </ng-container>
-          
-            <!-- Symbol Column -->
-            <ng-container matColumnDef="symbol">
-              <th mat-header-cell *matHeaderCellDef> Symbol </th>
-              <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+            <ng-container matColumnDef="editDelete">
+              <th mat-header-cell *matHeaderCellDef> Edit/Delete </th>
+              <td mat-cell *matCellDef="let element">
+                <button class="btn btn-secondary m-2"><i class="bi bi-pen"></i> </button>
+                <button class="btn btn-danger">X</button>
+              </td>
             </ng-container>
           
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

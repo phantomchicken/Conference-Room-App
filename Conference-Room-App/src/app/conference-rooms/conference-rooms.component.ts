@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
-import {MatTableModule} from '@angular/material/table';
 import { DatabaseService } from '../database.service';
+import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-users',
+  selector: 'app-conference-rooms',
   imports: [MatTableModule, CommonModule],
-  templateUrl: './users.component.html',
-  styleUrl: './users.component.css'
+  templateUrl: './conference-rooms.component.html',
+  styleUrl: './conference-rooms.component.css'
 })
-export class UsersComponent {
+export class ConferenceRoomsComponent {
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
   dataSource = [];
   status = '';
@@ -17,6 +17,6 @@ export class UsersComponent {
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit() {
-    this.dbService.getUsers().subscribe(data => this.dataSource = data);
+    this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data);
   }
 }

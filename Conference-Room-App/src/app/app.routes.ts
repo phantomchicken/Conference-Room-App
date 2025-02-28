@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { TemplateComponent } from './template/template.component';
 import { ReservationsComponent } from './reservations/reservations.component';
 import { UsersComponent } from './users/users.component';
+import { ConferenceRoomsComponent } from './conference-rooms/conference-rooms.component';
 
 export const routes: Routes = [
   {
@@ -10,6 +11,8 @@ export const routes: Routes = [
     children: [
       { path: '', component: ReservationsComponent },
       { path: 'users', component: UsersComponent },
+      { path: 'reservations', component: ReservationsComponent},
+      { path: 'conference-rooms', component: ConferenceRoomsComponent}
     ]
   }
 ];

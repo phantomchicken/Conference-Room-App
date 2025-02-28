@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TemplateComponent } from './template/template.component';
 import {MatTableModule} from '@angular/material/table';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [TemplateComponent, RouterOutlet, MatTableModule],
+  imports: [TemplateComponent, RouterOutlet, MatTableModule, CommonModule],
   template: `<router-outlet></router-outlet>`,
   styleUrls: ['./app.component.css']
 })
