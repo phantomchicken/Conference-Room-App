@@ -12,6 +12,7 @@ export interface Reservation {
     id?: number;
     conferenceRoomId: number;
     participantIds: number[];
-    startDate?: Date;
+    startTime: Date;
+    endTime: Date;
 }
   

@@ -19,12 +19,13 @@ import { ConferenceRoom, Reservation, User } from '../models';
 })
 
 export class ReservationsComponent {
-  displayedColumns: string[] = ['id', 'conferenceRoom', 'participants', 'editDelete'];
+  displayedColumns: string[] = ['id', 'conferenceRoom', 'participants', 'editDelete', 'date', 'startTime', 'endTime'];
   dataSource = [];
   status = '';
   statusClass = '';
   formControl: any;
-  value: Date = new Date();
+  startTime: Date = new Date();
+  endTime: Date = new Date();
   isAdding = false;
   
   userList: any[] = [];
@@ -54,13 +55,14 @@ export class ReservationsComponent {
   }
 
   addReservation() {
-    if (!this.selectedConferenceRoom || this.selectedConferenceRoom.id === null || !this.selectedUsers.length || !this.value) {
+    if (!this.selectedConferenceRoom || this.selectedConferenceRoom.id === null || !this.selectedUsers.length || !this.startTime || !this.endTime) {
       return;
     }
     const reservation: Reservation = {
       conferenceRoomId: this.selectedConferenceRoom.id,
       participantIds: this.selectedUsers.map(user => user.id),
-      // startDate: this.value
+      startTime: this.startTime,
+      endTime: this.endTime
     };
   
     this.dbService.addReservation(reservation).subscribe({

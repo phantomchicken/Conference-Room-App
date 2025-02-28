@@ -54,7 +54,7 @@ app.get('/reservations', async (req, res) => {
 });
 
 app.post('/reservations', async (req, res) => {
-  const { conferenceRoomId, participantIds} = req.body;
+  const { conferenceRoomId, participantIds, startTime, endTime} = req.body;
 
   if (!conferenceRoomId || !participantIds) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -64,7 +64,8 @@ app.post('/reservations', async (req, res) => {
     data: {
       conferenceRoom: { connect: { id: conferenceRoomId } },
       participants: { connect: participantIds.map((id) => ({ id })) },
-      // startDate: new Date(startDate) // Ensure the startDate is saved as a valid Date object
+      startTime: new Date(startTime),
+      endTime: new Date(endTime) 
     }
   });
 

@@ -29,6 +29,21 @@
                 </div>
               </td>
             </ng-container>
+
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef> Date </th>
+              <td mat-cell *matCellDef="let element"> {{element.startTime | date:'dd/MM/yyyy'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="startTime">
+              <th mat-header-cell *matHeaderCellDef> Start </th>
+              <td mat-cell *matCellDef="let element"> {{element.startTime | date:'shortTime'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="endTime">
+              <th mat-header-cell *matHeaderCellDef> End </th>
+              <td mat-cell *matCellDef="let element"> {{element.endTime | date:'shortTime'}} </td>
+            </ng-container>
           
             <ng-container matColumnDef="editDelete">
               <th mat-header-cell *matHeaderCellDef> Edit/Delete </th>
@@ -68,17 +83,27 @@
 
             <mat-form-field>
               <mat-label>Meeting date</mat-label>
-              <input matInput [matDatepicker]="datepicker" [(ngModel)]="value" name="value">
+              <input matInput [matDatepicker]="datepicker" [(ngModel)]="startTime" name="startTime">
               <mat-datepicker #datepicker/>
               <mat-datepicker-toggle [for]="datepicker" matSuffix/>
             </mat-form-field>
             
             <mat-form-field>
-              <mat-label>Meeting time</mat-label>
+              <mat-label>Meeting start</mat-label>
               <input matInput
                 [matTimepicker]="timepicker"
-                [(ngModel)]="value"
-                [ngModelOptions]="{updateOn: 'blur'}" name="value">
+                [(ngModel)]="startTime"
+                [ngModelOptions]="{updateOn: 'blur'}" name="startTime">
+              <mat-timepicker #timepicker/>
+              <mat-timepicker-toggle [for]="timepicker" matSuffix/>
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Meeting end</mat-label>
+              <input matInput
+                [matTimepicker]="timepicker"
+                [(ngModel)]="endTime"
+                [ngModelOptions]="{updateOn: 'blur'}" name="endTime">
               <mat-timepicker #timepicker/>
               <mat-timepicker-toggle [for]="timepicker" matSuffix/>
             </mat-form-field>
