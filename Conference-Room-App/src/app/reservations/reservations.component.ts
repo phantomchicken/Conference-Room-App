@@ -13,12 +13,25 @@ import { CommonModule } from '@angular/common';
 export class ReservationsComponent {
   displayedColumns: string[] = ['id', 'conferenceRoom', 'participants', 'editDelete'];
   dataSource = [];
-  status: string = '';
+  status = '';
+  statusClass = '';
 
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit() {
     this.dbService.getReservations().subscribe(data => this.dataSource = data);
+  }
+
+  deleteReservation(id:number){
+    this.dbService.deleteReservation(id).subscribe({
+      next: () => {
+        this.status = 'Reservation deleted successfully.',
+        this.statusClass = 'alert alert-success',
+        this.dbService.getReservations().subscribe(data => this.dataSource = data)
+      }, 
+      error: (err) => this.status = 'Error deleting reservation!'
+    }
+    );
   }
 
 }

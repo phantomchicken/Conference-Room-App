@@ -21,6 +21,12 @@ app.post('/users', async (req, res) => {
   res.json(user);
 });
 
+app.delete('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const user = await prisma.user.delete({ where: { id: Number(id) } });
+  res.status(204).send();
+});
+
 // Conference Rooms
 app.get('/conference-rooms', async (req, res) => {
   const conferenceRooms = await prisma.conferenceRoom.findMany();
@@ -31,6 +37,12 @@ app.post('/conference-rooms', async (req, res) => {
   const { name } = req.body;
   const conferenceRoom = await prisma.conferenceRoom.create({ data: { name } });
   res.json(conferenceRoom);
+});
+
+app.delete('/conference-rooms/:id', async (req, res) => {
+  const { id } = req.params;
+  const conferenceRoom = await prisma.conferenceRoom.delete({ where: { id: Number(id) } });
+  res.status(204).send();
 });
 
 // Reservations
@@ -52,6 +64,12 @@ app.post('/reservations', async (req, res) => {
   });
 
   res.json(reservation);
+});
+
+app.delete('/reservations/:id', async (req, res) => {
+  const { id } = req.params;
+  const reservation = await prisma.reservation.delete({ where: { id: Number(id) } });
+  res.status(204).send();
 });
 
 // Start server
