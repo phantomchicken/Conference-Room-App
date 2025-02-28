@@ -42,9 +42,28 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
     </div>
+    <form (ngSubmit)="addReservation()">
+      <mat-form-field>
+        <mat-label>Meeting date</mat-label>
+        <input matInput [matDatepicker]="datepicker" [(ngModel)]="value">
+        <mat-datepicker #datepicker/>
+        <mat-datepicker-toggle [for]="datepicker" matSuffix/>
+      </mat-form-field>
+      
+      <mat-form-field>
+        <mat-label>Meeting time</mat-label>
+        <input matInput
+          [matTimepicker]="timepicker"
+          [(ngModel)]="value"
+          [ngModelOptions]="{updateOn: 'blur'}">
+        <mat-timepicker #timepicker/>
+        <mat-timepicker-toggle [for]="timepicker" matSuffix/>
+      </mat-form-field>
+      <button type="submit" class="btn btn-success w-25">Add</button>
+    </form>
     <div class="row justify-content-center align-items-center mt-4">
         <div class="col-4 justify-content-center align-items-center text-center">
-            <button class="btn btn-success">Add Conference Room</button>
+            <button class="btn btn-success">Add Reservation</button>
         </div>
     </div>
 </div>

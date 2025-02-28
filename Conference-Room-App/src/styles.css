@@ -2,3 +2,10 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* seethrough datepicker fix */
+mat-option {
+background-color: white !important;
+box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+border-radius: 8px;
+}

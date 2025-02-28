@@ -33,7 +33,11 @@
     </div>
     <div class="row justify-content-center align-items-center mt-4">
       <div class="col-4 justify-content-center align-items-center text-center">
-          <button class="btn btn-success">Add User</button>
+          <button *ngIf="!isAdding" class="btn btn-success" (click)="showAddUserForm()">Add User</button>
+          <form *ngIf="isAdding" (ngSubmit)="addUser()">
+            <input type="text" class="form-control mb-2" name="name" [(ngModel)]="name" placeholder="Name">
+            <button  class="btn btn-success" (click)="showAddUserForm()">Create User</button>
+          </form>
       </div>
   </div>
 </div>

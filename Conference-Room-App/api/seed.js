@@ -2,8 +2,12 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
+  console.log('Clearing database...');
+  await prisma.user.deleteMany();
+  await prisma.reservation.deleteMany();
+  await prisma.conferenceRoom.deleteMany();
+  
   console.log('Seeding database...');
-
   // Create Users
   const users = await prisma.user.createMany({
     data: [
