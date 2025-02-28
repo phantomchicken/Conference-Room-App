@@ -11,6 +11,20 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  name  String
+  id           Int           @id @default(autoincrement())
+  name         String
+  reservations Reservation[]
+}
+
+model ConferenceRoom {
+  id           Int           @id @default(autoincrement())
+  name         String
+  reservations Reservation[]
+}
+
+model Reservation {
+  id               Int            @id @default(autoincrement())
+  conferenceRoom   ConferenceRoom @relation(fields: [conferenceRoomId], references: [id])
+  conferenceRoomId Int
+  participants     User[]
 }
