@@ -24,6 +24,7 @@ export class ReservationsComponent {
   status = '';
   statusClass = '';
   formControl: any;
+  startDate: Date = new Date();
   startTime: Date = new Date();
   endTime: Date = new Date();
   isAdding = false;
@@ -55,14 +56,21 @@ export class ReservationsComponent {
   }
 
   addReservation() {
-    if (!this.selectedConferenceRoom || this.selectedConferenceRoom.id === null || !this.selectedUsers.length || !this.startTime || !this.endTime) {
+    if (!this.selectedConferenceRoom || this.selectedConferenceRoom.id === null || !this.selectedUsers.length || !this.startDate || !this.startTime || !this.endTime) {
       return;
     }
+
+    const startDateTime = new Date(this.startDate);
+    startDateTime.setHours(this.startTime.getHours(), this.startTime.getMinutes());
+
+    const endDateTime = new Date(this.startDate);
+    endDateTime.setHours(this.endTime.getHours(), this.endTime.getMinutes());
+
     const reservation: Reservation = {
       conferenceRoomId: this.selectedConferenceRoom.id,
       participantIds: this.selectedUsers.map(user => user.id),
-      startTime: this.startTime,
-      endTime: this.endTime
+      startTime: startDateTime,
+      endTime: endDateTime
     };
   
     this.dbService.addReservation(reservation).subscribe({

@@ -82,30 +82,32 @@
             </mat-form-field>
 
             <mat-form-field>
-              <mat-label>Meeting date</mat-label>
-              <input matInput [matDatepicker]="datepicker" [(ngModel)]="startTime" name="startTime">
-              <mat-datepicker #datepicker/>
-              <mat-datepicker-toggle [for]="datepicker" matSuffix/>
+              <mat-label>Meeting Date</mat-label>
+              <input matInput [matDatepicker]="datepicker" [(ngModel)]="startDate" name="startDate">
+              <mat-datepicker #datepicker></mat-datepicker>
+              <mat-datepicker-toggle [for]="datepicker" matSuffix></mat-datepicker-toggle>
             </mat-form-field>
-            
+          
             <mat-form-field>
-              <mat-label>Meeting start</mat-label>
+              <mat-label>Meeting Start</mat-label>
               <input matInput
-                [matTimepicker]="timepicker"
+                [matTimepicker]="startTimepicker"
                 [(ngModel)]="startTime"
-                [ngModelOptions]="{updateOn: 'blur'}" name="startTime">
-              <mat-timepicker #timepicker/>
-              <mat-timepicker-toggle [for]="timepicker" matSuffix/>
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                name="startTime">
+              <mat-timepicker #startTimepicker></mat-timepicker>
+              <mat-timepicker-toggle [for]="startTimepicker" matSuffix></mat-timepicker-toggle>
             </mat-form-field>
-
+          
             <mat-form-field>
-              <mat-label>Meeting end</mat-label>
+              <mat-label>Meeting End</mat-label>
               <input matInput
-                [matTimepicker]="timepicker"
+                [matTimepicker]="endTimepicker"
                 [(ngModel)]="endTime"
-                [ngModelOptions]="{updateOn: 'blur'}" name="endTime">
-              <mat-timepicker #timepicker/>
-              <mat-timepicker-toggle [for]="timepicker" matSuffix/>
+                [ngModelOptions]="{ updateOn: 'blur' }"
+                name="endTime">
+              <mat-timepicker #endTimepicker></mat-timepicker>
+              <mat-timepicker-toggle [for]="endTimepicker" matSuffix></mat-timepicker-toggle>
             </mat-form-field>
 
             <button type="button" class="btn btn-success" (click)="addReservation()">Create Reservation</button>
