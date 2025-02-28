@@ -1,6 +1,5 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-api/node_modules
-!node_modules
+/api/node_modules
 .angular
 .vscode
 # Compiled output
