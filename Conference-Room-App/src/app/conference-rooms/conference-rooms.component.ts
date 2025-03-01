@@ -18,6 +18,7 @@ export class ConferenceRoomsComponent {
   statusClass = '';
   isAdding = false;
   name:string = '';
+  isEditing: Map<number, boolean> = new Map();
 
   constructor(private dbService: DatabaseService) {}
 
@@ -36,7 +37,7 @@ export class ConferenceRoomsComponent {
     });
   }
 
-  toggleAddReservationForm() {
+  toggleAddConferenceRoomForm() {
     this.isAdding = !this.isAdding;
   }
 
@@ -44,12 +45,38 @@ export class ConferenceRoomsComponent {
     const conferenceRoom: ConferenceRoom = {
       name: this.name,
     };
+
     this.dbService.addConferenceRoom(conferenceRoom).subscribe({
       next: () => {
         this.status = 'Conference room added successfully.',
         this.statusClass = 'alert alert-success',
         this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
         this.isAdding = false
+      }, 
+      error: (err) => {
+        this.status = err.error.error,
+        this.statusClass = 'alert alert-danger'
+      }  
+    });
+  }
+
+  toggleEditConferenceRoomForm(id:number) {
+    this.isEditing.set(id, !this.isEditing.get(id))
+  }
+
+  editUser(id:number, name:string){
+    const conferenceRoom: ConferenceRoom = {
+      id: id,
+      name: name,
+    };
+
+    this.dbService.editConferenceRoom(conferenceRoom).subscribe({
+      next: () => {
+        this.status = 'Conference room edited successfully.',
+        this.statusClass = 'alert alert-success',
+        this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
+        this.isAdding = false
+        this.toggleEditConferenceRoomForm(id)
       }, 
       error: (err) => {
         this.status = err.error.error,

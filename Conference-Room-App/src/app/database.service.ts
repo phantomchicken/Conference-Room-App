@@ -18,6 +18,10 @@ export class DatabaseService {
   addUser(user: User): Observable<User> {
     return this.http.post<User>(this.API_URL + 'users', user);
   }
+  
+  editUser(user: User): Observable<User> {
+    return this.http.put<User>(`${this.API_URL}users/${user.id}`, user);
+  }
 
   deleteUser(id: number): Observable<any> {
     return this.http.delete(this.API_URL + 'users/' + id);
@@ -41,6 +45,10 @@ export class DatabaseService {
 
   addConferenceRoom(conferenceRoom: ConferenceRoom): Observable<ConferenceRoom> {
     return this.http.post<ConferenceRoom>(this.API_URL + 'conference-rooms', conferenceRoom);
+  }
+
+  editConferenceRoom(conferenceRoom: ConferenceRoom): Observable<ConferenceRoom> {
+    return this.http.put<ConferenceRoom>(`${this.API_URL}conference-rooms/${conferenceRoom.id}`, conferenceRoom);
   }
 
   deleteConferenceRoom(id: number): Observable<any> {

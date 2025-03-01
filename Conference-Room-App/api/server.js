@@ -26,6 +26,17 @@ app.post('/users', async (req, res) => {
   res.status(201).json(user);
 });
 
+app.put('/users/:id', async (req, res) => {
+  if (!req.body.name) {
+    return res.status(400).json({ error: 'Missing name!' });
+  } else if (req.body.name.length < 3) {
+    return res.status(400).json({ error: 'Name must be at least 3 characters!' });
+  }
+
+  const user = await prisma.user.update({ where: { id: Number(req.params.id) }, data: { name: req.body.name } });
+  res.status(200).json(user);
+});
+
 app.delete('/users/:id', async (req, res) => {
   const { id } = req.params;
   const user = await prisma.user.delete({ where: { id: Number(id) } });
@@ -36,6 +47,15 @@ app.delete('/users/:id', async (req, res) => {
 app.get('/conference-rooms', async (req, res) => {
   const conferenceRooms = await prisma.conferenceRoom.findMany();
   res.json(conferenceRooms);
+});
+
+app.put('/conference-rooms/:id', async (req, res) => {
+  if (!req.body.name) {
+    return res.status(400).json({ error: 'Missing name!' });
+  }
+
+  const conferenceRoom = await prisma.conferenceRoom.update({ where: { id: Number(req.body.id) }, data: { name: req.body.name } });
+  res.status(200).json(conferenceRoom);
 });
 
 app.post('/conference-rooms', async (req, res) => {

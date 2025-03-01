@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import {MatTableModule} from '@angular/material/table';
+import { Component, ViewChild, inject } from '@angular/core';
+import {MatTable, MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import {MatTimepickerModule} from '@angular/material/timepicker';
@@ -10,17 +10,19 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ConferenceRoom, Reservation, User } from '../models';
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-reservations',
-  imports: [MatTableModule, CommonModule, MatTimepickerModule, MatFormFieldModule, MatInputModule, FormsModule, MatDatepickerModule, MatNativeDateModule, MatSelectModule],
+  imports: [MatSortModule, MatPaginatorModule, MatTableModule, CommonModule, MatTimepickerModule, MatFormFieldModule, MatInputModule, FormsModule, MatDatepickerModule, MatNativeDateModule, MatSelectModule],
   templateUrl: './reservations.component.html',
   styleUrl: './reservations.component.css'
 })
 
 export class ReservationsComponent {
-  displayedColumns: string[] = ['id', 'conferenceRoom', 'participants', 'editDelete', 'date', 'startTime', 'endTime'];
-  dataSource: Reservation[] = [];
+  displayedColumns: string[] = ['id', 'conferenceRoom', 'participants', 'date', 'startTime', 'endTime', 'editDelete'];
+  dataSource = new MatTableDataSource<Reservation>();
   status = '';
   statusClass = '';
   formControl: any;
@@ -36,14 +38,21 @@ export class ReservationsComponent {
   selectedConferenceRoom: ConferenceRoom | null = null;
 
   private readonly _adapter = inject<DateAdapter<unknown, unknown>>(DateAdapter);
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit() {
-    this.dbService.getReservations().subscribe(data => this.dataSource = data);
+    this.dbService.getReservations().subscribe(data => this.dataSource.data = data);
     this.dbService.getUsers().subscribe(data => this.userList = data);
     this.dbService.getConferenceRooms().subscribe(data => this.conferenceRoomList = data);
     this._adapter.setLocale('sl-SI');
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   deleteReservation(id:number){
@@ -51,7 +60,7 @@ export class ReservationsComponent {
       next: () => {
         this.status = 'Reservation deleted successfully.',
         this.statusClass = 'alert alert-success',
-        this.dbService.getReservations().subscribe(data => this.dataSource = data)
+        this.dbService.getReservations().subscribe(data => this.dataSource.data = data)
       }, 
       error: (err) => this.status = 'Error deleting reservation!'
     });
@@ -102,7 +111,7 @@ export class ReservationsComponent {
         next: () => {
           this.status = 'Reservation added successfully.',
           this.statusClass = 'alert alert-success',
-          this.dbService.getReservations().subscribe(data => this.dataSource = data)
+          this.dbService.getReservations().subscribe(data => this.dataSource.data = data)
         },
         error: (err) => {
           this.status = 'Error adding reservation!',
