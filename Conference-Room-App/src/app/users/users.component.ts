@@ -13,7 +13,7 @@ import { User } from '../models';
 })
 export class UsersComponent {
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
-  dataSource = [];
+  dataSource: User[] = [];
   status = '';
   statusClass = '';
   isAdding = false
@@ -33,8 +33,7 @@ export class UsersComponent {
         this.dbService.getUsers().subscribe(data => this.dataSource = data)
       }, 
       error: (err) => this.status = 'Error deleting user!'
-    }
-    );
+    });
   }
 
   toggleAddUserForm() {
@@ -57,7 +56,6 @@ export class UsersComponent {
         this.status = err.error.error,
         this.statusClass = 'alert alert-danger'
       }  
-    }
-    );
+    });
   }
 }

@@ -11,8 +11,8 @@ export class DatabaseService {
 
   constructor(private http: HttpClient) {}
 
-  getUsers(): Observable<any> {
-    return this.http.get(this.API_URL + 'users');
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.API_URL + 'users');
   }
 
   addUser(user: User): Observable<User> {
@@ -23,8 +23,8 @@ export class DatabaseService {
     return this.http.delete(this.API_URL + 'users/' + id);
   }
 
-  getReservations(): Observable<any> {
-    return this.http.get(this.API_URL + 'reservations');
+  getReservations(): Observable<Reservation[]> {
+    return this.http.get<Reservation[]>(this.API_URL + 'reservations');
   }
 
   addReservation(reservation: Reservation): Observable<Reservation> {
@@ -35,8 +35,8 @@ export class DatabaseService {
     return this.http.delete(this.API_URL + 'reservations/' + id);
   }
 
-  getConferenceRooms(): Observable<any> {
-    return this.http.get(this.API_URL + 'conference-rooms');
+  getConferenceRooms(): Observable<ConferenceRoom[]> {
+    return this.http.get<ConferenceRoom[]>(this.API_URL + 'conference-rooms');
   }
 
   addConferenceRoom(conferenceRoom: ConferenceRoom): Observable<ConferenceRoom> {

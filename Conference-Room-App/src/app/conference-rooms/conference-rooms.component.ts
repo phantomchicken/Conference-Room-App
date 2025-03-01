@@ -13,7 +13,7 @@ import { ConferenceRoom } from '../models';
 })
 export class ConferenceRoomsComponent {
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
-  dataSource = [];
+  dataSource: ConferenceRoom[] = [];
   status = '';
   statusClass = '';
   isAdding = false;
@@ -33,8 +33,7 @@ export class ConferenceRoomsComponent {
         this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
       }, 
       error: (err) => this.status = 'Error deleting conference room!'
-    }
-    );
+    });
   }
 
   toggleAddReservationForm() {
@@ -56,7 +55,6 @@ export class ConferenceRoomsComponent {
         this.status = err.error.error,
         this.statusClass = 'alert alert-danger'
       }  
-    }
-    );
+    });
   }
 }
