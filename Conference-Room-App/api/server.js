@@ -81,6 +81,15 @@ app.get('/reservations', async (req, res) => {
   res.json(reservations);
 });
 
+app.get('/reservations/:id', async (req, res) => {
+  const { id } = req.params;
+  const reservation = await prisma.reservation.findUnique({
+    where: { id: Number(id) },
+    include: { participants: true, conferenceRoom: true }
+  });
+  res.status(200).json(reservation);
+})
+
 app.post('/reservations', async (req, res) => {
   const { name, conferenceRoomId, participantIds, startTime, endTime} = req.body;
 
@@ -99,6 +108,22 @@ app.post('/reservations', async (req, res) => {
   });
 
   res.status(201).json(reservation);
+});
+
+app.put('/reservations/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  const updatedReservation = await prisma.reservation.update({
+    where: { id: Number(id) },
+    data: { name },  // Only update the name
+  });
+
+  res.status(200).json(updatedReservation);
 });
 
 app.delete('/reservations/:id', async (req, res) => {

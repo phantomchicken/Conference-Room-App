@@ -31,8 +31,16 @@ export class DatabaseService {
     return this.http.get<Reservation[]>(this.API_URL + 'reservations');
   }
 
+  getReservation(id: number): Observable<Reservation> {
+    return this.http.get<Reservation>(`${this.API_URL}reservations/${id}`);
+  }
+
   addReservation(reservation: Reservation): Observable<Reservation> {
     return this.http.post<Reservation>(this.API_URL + 'reservations', reservation );
+  }
+
+  editReservation(reservation: Reservation): Observable<Reservation> {
+    return this.http.put<Reservation>(`${this.API_URL}reservations/${reservation.id}`, reservation);
   }
 
   deleteReservation(id: number): Observable<any> {

@@ -31,6 +31,7 @@ export class ReservationsComponent {
   startTime: Date = new Date();
   endTime: Date = new Date();
   isAdding = false;
+  isEditing: Map<number, boolean> = new Map();
   
   userList: any[] = [];
   selectedUsers: User[] = [];
@@ -85,6 +86,10 @@ export class ReservationsComponent {
       this.status = 'Reservation cannot be in the past.';
       this.statusClass = 'alert alert-danger';
       return;
+    } else if (startDateTime > endDateTime) {
+      this.status = 'Start time cannot be after end time.';
+      this.statusClass = 'alert alert-danger';
+      return;
     }
 
     this.dbService.getReservations().subscribe(data => {
@@ -125,6 +130,33 @@ export class ReservationsComponent {
 
   toggleAddReservationForm() {
     this.isAdding = !this.isAdding;
+  }
+
+  toggleEditReservationForm(id: number) {
+    this.isEditing.set(id, !this.isEditing.get(id))
+  }
+
+  editReservation(reservation:Reservation, name: string) {
+    const updatedReservation: Reservation = {
+      ...reservation,
+      name: name,
+    };
+
+    this.dbService.editReservation(updatedReservation).subscribe({
+      next: () => {
+        this.status = 'Reservation edited successfully.';
+        this.statusClass = 'alert alert-success';
+        this.dbService.getReservations().subscribe(data => this.dataSource.data = data);
+        this.isAdding = false;
+        this.toggleEditReservationForm(reservation.id!);
+      },
+      error: (err) => {
+        this.status = err.error.error;
+        this.statusClass = 'alert alert-danger';
+      }
+    });
+
+    
   }
 
 }
