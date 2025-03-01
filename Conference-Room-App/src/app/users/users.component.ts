@@ -3,6 +3,7 @@ import {MatTableModule} from '@angular/material/table';
 import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { User } from '../models';
 
 @Component({
   selector: 'app-users',
@@ -41,18 +42,22 @@ export class UsersComponent {
   }
 
   addUser(){
-    this.dbService.addUser(this.name).subscribe({
+    const user: User = {
+      name: this.name,
+    };
+
+    this.dbService.addUser(user).subscribe({
       next: () => {
         this.status = 'User added successfully.',
         this.statusClass = 'alert alert-success',
         this.dbService.getUsers().subscribe(data => this.dataSource = data)
+        this.isAdding = false
       }, 
       error: (err) => {
-        this.status = 'Error adding user!',
+        this.status = err.error.error,
         this.statusClass = 'alert alert-danger'
       }  
     }
     );
-    this.isAdding = false
   }
 }

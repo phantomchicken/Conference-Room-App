@@ -3,6 +3,7 @@ import { DatabaseService } from '../database.service';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ConferenceRoom } from '../models';
 
 @Component({
   selector: 'app-conference-rooms',
@@ -41,18 +42,21 @@ export class ConferenceRoomsComponent {
   }
 
   addConferenceRoom(){
-    this.dbService.addConferenceRoom(this.name).subscribe({
+    const conferenceRoom: ConferenceRoom = {
+      name: this.name,
+    };
+    this.dbService.addConferenceRoom(conferenceRoom).subscribe({
       next: () => {
         this.status = 'Conference room added successfully.',
         this.statusClass = 'alert alert-success',
         this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
+        this.isAdding = false
       }, 
       error: (err) => {
-        this.status = 'Error adding conference room!',
+        this.status = err.error.error,
         this.statusClass = 'alert alert-danger'
       }  
     }
     );
-    this.isAdding = false
   }
 }

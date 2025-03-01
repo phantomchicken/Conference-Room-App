@@ -67,8 +67,8 @@ export class ReservationsComponent {
     endDateTime.setHours(this.endTime.getHours(), this.endTime.getMinutes());
 
     const reservation: Reservation = {
-      conferenceRoomId: this.selectedConferenceRoom.id,
-      participantIds: this.selectedUsers.map(user => user.id),
+      conferenceRoomId: this.selectedConferenceRoom.id!,
+      participantIds: this.selectedUsers.map(user => user.id!),
       startTime: startDateTime,
       endTime: endDateTime
     };

@@ -16,9 +16,14 @@ app.get('/users', async (req, res) => {
 });
 
 app.post('/users', async (req, res) => {
-  const { name } = req.body;
-  const user = await prisma.user.create({ data: { name } });
-  res.json(user);
+  if (!req.body.name) {
+    return res.status(400).json({ error: 'Missing name!' });
+  } else if (req.body.name.length < 3) {
+    return res.status(400).json({ error: 'Name must be at least 3 characters!' });
+  }
+
+  const user = await prisma.user.create({ data: { name: req.body.name } });
+  res.status(201).json(user);
 });
 
 app.delete('/users/:id', async (req, res) => {
@@ -34,9 +39,12 @@ app.get('/conference-rooms', async (req, res) => {
 });
 
 app.post('/conference-rooms', async (req, res) => {
-  const { name } = req.body;
-  const conferenceRoom = await prisma.conferenceRoom.create({ data: { name } });
-  res.json(conferenceRoom);
+  if (!req.body.name) {
+    return res.status(400).json({ error: 'Missing name!' });
+  }
+
+  const conferenceRoom = await prisma.conferenceRoom.create({ data: { name: req.body.name } });
+  res.status(201).json(conferenceRoom);
 });
 
 app.delete('/conference-rooms/:id', async (req, res) => {

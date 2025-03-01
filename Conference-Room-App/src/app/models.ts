@@ -1,10 +1,10 @@
 export interface ConferenceRoom {
-    id: number;
+    id?: number;
     name: string;
 }
 
 export interface User {
-    id: number;
+    id?: number;
     name: string;
 }
 

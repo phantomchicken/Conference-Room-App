@@ -35,7 +35,7 @@
       <div class="col-4 justify-content-center align-items-center text-center">
           <button *ngIf="!isAdding" class="btn btn-success" (click)="toggleAddUserForm()">Add User</button>
           <button *ngIf="isAdding" class="btn btn-primary" (click)="toggleAddUserForm()">Hide Form</button>
-          <form *ngIf="isAdding" (ngSubmit)="addUser()" class="mt-4">
+          <form *ngIf="isAdding" class="mt-4">
             <input type="text" class="form-control mb-2" name="name" [(ngModel)]="name" placeholder="Name">
             <button  class="btn btn-success mt-4" (click)="addUser()">Create User</button>
           </form>
