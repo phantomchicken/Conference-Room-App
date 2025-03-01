@@ -21,10 +21,11 @@ import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
 })
 
 export class ReservationsComponent {
-  displayedColumns: string[] = ['id', 'conferenceRoom', 'participants', 'date', 'startTime', 'endTime', 'editDelete'];
+  displayedColumns: string[] = ['id', 'name', 'conferenceRoom', 'participants', 'date', 'startTime', 'endTime', 'editDelete'];
   dataSource = new MatTableDataSource<Reservation>();
   status = '';
   statusClass = '';
+  name: string = '';
   formControl: any;
   startDate: Date = new Date();
   startTime: Date = new Date();
@@ -67,7 +68,7 @@ export class ReservationsComponent {
   }
 
   addReservation() {
-    if (!this.selectedConferenceRoom || this.selectedConferenceRoom.id === null || !this.selectedUsers.length || !this.startDate || !this.startTime || !this.endTime) {
+    if (!this.name || !this.selectedConferenceRoom || this.selectedConferenceRoom.id === null || !this.selectedUsers.length || !this.startDate || !this.startTime || !this.endTime) {
       this.status = 'Please fill in all fields.';
       this.statusClass = 'alert alert-danger';
       return;
@@ -101,6 +102,7 @@ export class ReservationsComponent {
       }   
 
       const reservation: Reservation = {
+        name: this.name,
         conferenceRoomId: this.selectedConferenceRoom!.id!,
         participantIds: this.selectedUsers.map(user => user.id!),
         startTime: startDateTime,

@@ -82,14 +82,15 @@ app.get('/reservations', async (req, res) => {
 });
 
 app.post('/reservations', async (req, res) => {
-  const { conferenceRoomId, participantIds, startTime, endTime} = req.body;
+  const { name, conferenceRoomId, participantIds, startTime, endTime} = req.body;
 
-  if (!conferenceRoomId || !participantIds) {
+  if (!name || !conferenceRoomId || !participantIds) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   const reservation = await prisma.reservation.create({
     data: {
+      name: name,
       conferenceRoom: { connect: { id: conferenceRoomId } },
       participants: { connect: participantIds.map((id) => ({ id })) },
       startTime: new Date(startTime),

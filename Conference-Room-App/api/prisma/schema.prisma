@@ -24,6 +24,7 @@ model ConferenceRoom {
 
 model Reservation {
   id               Int            @id @default(autoincrement())
+  name             String
   conferenceRoom   ConferenceRoom @relation(fields: [conferenceRoomId], references: [id])
   conferenceRoomId Int
   startTime        DateTime       @default(now())

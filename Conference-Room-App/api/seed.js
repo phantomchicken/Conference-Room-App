@@ -30,11 +30,25 @@ async function main() {
   const userList = await prisma.user.findMany();
   const roomList = await prisma.conferenceRoom.findMany();
 
+  const startTime1 = addDays(new Date(), 1);
+  const startTime2 = addDays(new Date(), 2);
+  const startTime3 = addDays(new Date(), 3);
+
+  const endTime1 = new Date(startTime1);
+  endTime1.setHours(endTime1.getHours() + 1);
+
+  const endTime2 = new Date(startTime2);
+  endTime2.setHours(endTime2.getHours() + 1);
+
+  const endTime3 = new Date(startTime3);
+  endTime3.setHours(endTime3.getHours() + 1);
+
   // Create Reservations
   await prisma.reservation.createMany({
     data: [
-      { conferenceRoomId: roomList[0].id },
-      { conferenceRoomId: roomList[1].id }
+      { name: 'Reservation 1', conferenceRoomId: roomList[0].id, startTime: startTime1, endTime: endTime1 },
+      { name: 'Reservation 2', conferenceRoomId: roomList[1].id, startTime: startTime2, endTime: endTime2 },
+      { name: 'Reservation 3', conferenceRoomId: roomList[2].id, startTime: startTime3, endTime: endTime3 }
     ]
   });
 
@@ -50,8 +64,19 @@ async function main() {
     data: { participants: { connect: [{ id: userList[2].id }] } }
   });
 
+  await prisma.reservation.update({
+    where: { id: reservations[2].id },
+    data: { participants: { connect: [{ id: userList[1].id }, { id: userList[2].id }] } }
+  });
+
   console.log('Seeding complete.');
 }
+
+const addDays = (date, days) => {
+  const newDate = new Date(date);
+  newDate.setDate(newDate.getDate() + days);
+  return newDate;
+};
 
 main()
   .catch((e) => console.error(e))

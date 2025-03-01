@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row">
+    <div class="row" *ngIf="dataSource.data.length">
         <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
 
             <!-- id Column -->
@@ -9,6 +9,11 @@
             </ng-container>
           
             <!-- Name Column -->
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Name </th>
+              <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+            </ng-container>
+
             <ng-container matColumnDef="conferenceRoom">
               <th mat-header-cell *matHeaderCellDef> Conference Room </th>
               <td mat-cell *matCellDef="let element"> {{element.conferenceRoom?.name}} </td>
@@ -69,6 +74,11 @@
           <button *ngIf="!isAdding" class="btn btn-success" (click)="toggleAddReservationForm()">Add Reservation</button>
           <button *ngIf="isAdding" class="btn btn-primary" (click)="toggleAddReservationForm()">Hide Form</button>
           <form *ngIf="isAdding" (ngSubmit)="addReservation()" class="mt-4">
+            <mat-form-field>
+              <mat-label>Name</mat-label>
+              <input matInput [(ngModel)]="name" name="name">
+            </mat-form-field>
+
             <mat-form-field>
               <mat-label>Conference Room</mat-label>
               <mat-select [(ngModel)]="selectedConferenceRoom" name="selectedConferenceRoom">

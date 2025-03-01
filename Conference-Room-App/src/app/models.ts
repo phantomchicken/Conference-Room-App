@@ -10,6 +10,7 @@ export interface User {
 
 export interface Reservation {
     id?: number;
+    name: string,
     conferenceRoomId: number;
     participantIds: number[];
     startTime: Date;
