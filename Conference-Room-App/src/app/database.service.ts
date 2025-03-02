@@ -62,4 +62,12 @@ export class DatabaseService {
   deleteConferenceRoom(id: number): Observable<any> {
     return this.http.delete(this.API_URL + 'conference-rooms/' + id);
   }
+
+  deleteAllData(): Observable<any> {
+    return this.http.delete(this.API_URL + 'admin/clear-data');
+  }
+
+  seedData(): Observable<any> {
+    return this.http.post(this.API_URL + 'admin/seed-data', {});
+  }
 }

@@ -1,13 +1,31 @@
 # ConferenceRoomApp
 
 A simple SPA made utilizing:
-- Angular for the FE
+- Angular for the FE (+ some other libraries, such as Angular Material for tables and inputs)
 - Node (Express) for the API
 - Prisma for handling DB work
 - an SQLite relational DB
 
-Users can add, edit, delete and view users and conference rooms.
+The app allows adding, editing, deleting and viewing users, conference rooms and the reservation of said rooms.
+
 Users can create conference room reservations, select the conference room they take place at, select their participants and their time of start and end. Reservations can not be made for the past, and every conference room reservation must not overlap with other reservations in the same conference room.
+
+Users need a name longer than 3 characters, conference rooms need just a name.
+Reservations need a name, a conference room, participants (1 or more), a time of start and end (date is the same).
+
+## Structure
+
+The Angular frontend runs on http://localhost:4200 by default, while the REST API is available on http://localhost:3000 with the following routes:
+
+`GET`, `POST`:
+- http://localhost:3000/users
+- http://localhost:3000/conference-rooms
+- http://localhost:3000/reservations
+
+`GET`, `DELETE`, `PUT`:
+- http://localhost:3000/users/:id
+- http://localhost:3000/conference-rooms/:id
+- http://localhost:3000/reservations/:id
 
 ## Setup
 
@@ -24,7 +42,7 @@ npm install
 cd api
 npm install
 
-# Either manually create an .env file with DATABASE_URL="file:./prisma/prisma/dev.db" and save it as UTF-8 or run these two commands
+# Either manually create an .env file with DATABASE_URL="file:./prisma/prisma/dev.db" and save it with UTF-8 encoding or run these two commands
 echo DATABASE_URL="'file:./prisma/prisma/dev.db'" > .env
 Set-Content .env 'DATABASE_URL="file:./prisma/dev.db"' -Encoding UTF8
 
@@ -40,3 +58,30 @@ cd Conference-Room-App
 cd Conference-Room-App
 ng serve --open
 ```
+
+The app is now running on http://localhost:4200, and the API is running on http://localhost:3000.
+The database can be quickly cleared and reseeded by visiting http://localhost:4200/admin and clicking the appropriate button (add/clear).
+
+## Testing
+
+Two simple mock unit tests were made. They test the functionalities of adding users and conference rooms. They are run by executing the following command from the root folder:
+```bash
+ng test --no-watch
+```
+
+## Examples
+
+![](./screenshots/users.png)
+Adding users
+
+![](./screenshots/conferencerooms.png)
+Unsuccessful conference room creation.
+
+![](./screenshots/reservation1.png)
+Unsuccessful reservation creation.
+
+![](./screenshots/reservation2.png)
+Unsuccessful reservation creation, due to overlapping with an existing reservation in the same conference room.
+
+![](./screenshots/reservation3.png)
+Successful reservation creation.
