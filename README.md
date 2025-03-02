@@ -30,19 +30,18 @@ The Angular frontend runs on http://localhost:4200 by default, while the REST AP
 ## Setup
 
 Make sure you have at least Node v18.13.
-Make sure you have no apps that occupy ports 3000 (api) or 4200 (Angular). 
+Ensure that ports 3000 (for the API) and 4200 (for Angular) are not in use by other applications. 
 Alternatively change the API URL in ```server.js```, and ```database.service.ts```
 
 First terminal:
 ```bash
 git clone https://github.com/phantomchicken/Conference-Room-App/
 cd Conference-Room-App
-cd Conference-Room-App
 npm install
 cd api
 npm install
 
-# Either manually create an .env file with DATABASE_URL="file:./prisma/prisma/dev.db" and save it with UTF-8 encoding or run these two commands
+# Either manually create an .env file with DATABASE_URL="file:./prisma/prisma/dev.db" and save it with UTF-8 encoding, or run these two commands
 echo DATABASE_URL="'file:./prisma/prisma/dev.db'" > .env
 Set-Content .env 'DATABASE_URL="file:./prisma/dev.db"' -Encoding UTF8
 
@@ -55,7 +54,9 @@ node server.js
 Second terminal:
 ```bash
 cd Conference-Room-App
-cd Conference-Room-App
+
+# Alternatively skip the global installation of Angular CLI and prefix every ng command with npx e.g. npx ng serve
+npm install -g @angular/cli 
 ng serve --open
 ```
 
