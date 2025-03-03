@@ -13,7 +13,6 @@ import { MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
   imports: [
     MatSortModule,
     MatPaginatorModule,
@@ -28,6 +27,5 @@ import { MatSortModule } from '@angular/material/sort';
     MatNativeDateModule,
   ],
   template: `<router-outlet></router-outlet>`,
-  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {}

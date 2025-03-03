@@ -86,7 +86,8 @@
 
   <div class="row mt-4">
     <div *ngIf="status">
-      <div [ngClass]="status ? statusClass : 'alert alert-primary'" role="alert">
+      @let messageClass = status ? statusClass : 'alert alert-primary';
+      <div [ngClass]="messageClass" role="alert">
         {{ status }}
       </div>
     </div>

@@ -1,7 +1,8 @@
 <div class="container">
   <div class="row">
     <div *ngIf="status">
-      <div [ngClass]="status ? statusClass : 'alert alert-primary'" role="alert">
+      @let messageClass = status ? statusClass : 'alert alert-primary';
+      <div [ngClass]="messageClass" role="alert">
         {{ status }}
       </div>
     </div>
@@ -36,7 +37,7 @@
           <button
             *ngIf="isEditing.get(element.id)"
             class="btn btn-success bi bi-check-square m-2"
-            (click)="editUser(element.id, element.name)"
+            (click)="editConferenceRoom(element.id, element.name)"
             aria-label="Save changes"></button>
           <button
             *ngIf="!isEditing.get(element.id)"

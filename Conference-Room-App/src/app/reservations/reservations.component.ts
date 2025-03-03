@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ConferenceRoom, Reservation, User } from '../models';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { EMPTY, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-reservations',
@@ -77,13 +78,18 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   }
 
   deleteReservation(id: number) {
-    this.dbService.deleteReservation(id).subscribe({
-      next: () => {
+    this.dbService.deleteReservation(id).pipe(
+      switchMap(() => this.dbService.getReservations())
+    ).subscribe({
+      next: (data) => {
+        this.dataSource.data = data;
         this.status = 'Reservation deleted successfully.';
         this.statusClass = 'alert alert-success';
-        this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));
       },
-      error: () => (this.status = 'Error deleting reservation!'),
+      error: () => {
+        this.status = 'Error deleting reservation!';
+        this.statusClass = 'alert alert-danger';
+      }
     });
   }
 
@@ -119,41 +125,45 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.dbService.getReservations().subscribe((data) => {
-      const existingReservations = data.filter(
-        (reservation) => reservation.conferenceRoomId === this.selectedConferenceRoom!.id
-      );
-
-      for (const reservation of existingReservations) {
-        const existingStart = new Date(reservation.startTime);
-        const existingEnd = new Date(reservation.endTime);
-
-        if (startDateTime < existingEnd && endDateTime > existingStart) {
-          this.status = 'Reservation overlaps with another reservation.';
-          this.statusClass = 'alert alert-danger';
-          return;
+    this.dbService.getReservations().pipe(
+      switchMap((data) => {
+        const existingReservations = data.filter(
+          (reservation) => reservation.conferenceRoomId === this.selectedConferenceRoom!.id
+        );
+    
+        for (const reservation of existingReservations) {
+          const existingStart = new Date(reservation.startTime);
+          const existingEnd = new Date(reservation.endTime);
+    
+          if (startDateTime < existingEnd && endDateTime > existingStart) {
+            this.status = 'Reservation overlaps with another reservation.';
+            this.statusClass = 'alert alert-danger';
+            return EMPTY;
+          }
         }
+    
+        const reservation: Reservation = {
+          name: this.name,
+          conferenceRoomId: this.selectedConferenceRoom!.id!,
+          participantIds: this.selectedUsers.map((user) => user.id!),
+          startTime: startDateTime,
+          endTime: endDateTime,
+        };
+    
+        return this.dbService.addReservation(reservation).pipe(
+          switchMap(() => this.dbService.getReservations())
+        );
+      })
+    ).subscribe({
+      next: (data) => {
+        this.dataSource.data = data;
+        this.status = 'Reservation added successfully.';
+        this.statusClass = 'alert alert-success';
+      },
+      error: () => {
+        this.status = 'Error adding reservation!';
+        this.statusClass = 'alert alert-danger';
       }
-
-      const reservation: Reservation = {
-        name: this.name,
-        conferenceRoomId: this.selectedConferenceRoom!.id!,
-        participantIds: this.selectedUsers.map((user) => user.id!),
-        startTime: startDateTime,
-        endTime: endDateTime,
-      };
-
-      this.dbService.addReservation(reservation).subscribe({
-        next: () => {
-          this.status = 'Reservation added successfully.';
-          this.statusClass = 'alert alert-success';
-          this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));
-        },
-        error: () => {
-          this.status = 'Error adding reservation!';
-          this.statusClass = 'alert alert-danger';
-        },
-      });
     });
   }
 
@@ -171,18 +181,20 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
       name: name,
     };
 
-    this.dbService.editReservation(updatedReservation).subscribe({
-      next: () => {
+    this.dbService.editReservation(updatedReservation).pipe(
+      switchMap(() => this.dbService.getReservations())
+    ).subscribe({
+      next: (data) => {
+        this.dataSource.data = data;
         this.status = 'Reservation edited successfully.';
         this.statusClass = 'alert alert-success';
-        this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));
         this.isAdding = false;
         this.toggleEditReservationForm(reservation.id!);
       },
       error: (err) => {
-        this.status = err.error.error;
+        this.status = err.error?.error || 'Error editing reservation!';
         this.statusClass = 'alert alert-danger';
-      },
+      }
     });
   }
 }

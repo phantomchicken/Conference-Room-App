@@ -8,13 +8,13 @@ import { AdminComponent } from './admin/admin.component';
 export const routes: Routes = [
   {
     path: '',
-    component: TemplateComponent, // 👈 Wrap all pages inside TemplateComponent
+    component: TemplateComponent,
     children: [
-      { path: '', component: ReservationsComponent },
-      { path: 'users', component: UsersComponent },
-      { path: 'reservations', component: ReservationsComponent },
-      { path: 'conference-rooms', component: ConferenceRoomsComponent },
-      { path: 'admin', component: AdminComponent },
+      { path: '', component: ReservationsComponent, title: 'Reservations' },
+      { path: 'users', component: UsersComponent, title: 'Users' },
+      { path: 'reservations', component: ReservationsComponent, title: 'Reservations' },
+      { path: 'conference-rooms', component: ConferenceRoomsComponent, title: 'Conference Rooms' },
+      { path: 'admin', component: AdminComponent, title: 'Admin' },
     ],
   },
 ];

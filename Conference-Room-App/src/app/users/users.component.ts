@@ -4,12 +4,12 @@ import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User } from '../models';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-users',
   imports: [MatTableModule, CommonModule, FormsModule],
   templateUrl: './users.component.html',
-  styleUrl: './users.component.css',
 })
 export class UsersComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
@@ -27,13 +27,18 @@ export class UsersComponent implements OnInit {
   }
 
   deleteUser(id: number) {
-    this.dbService.deleteUser(id).subscribe({
-      next: () => {
+    this.dbService.deleteUser(id).pipe(
+      switchMap(() => this.dbService.getUsers())
+    ).subscribe({
+      next: (data) => {
+        this.dataSource = data;
         this.status = 'User deleted successfully.';
         this.statusClass = 'alert alert-success';
-        this.dbService.getUsers().subscribe((data) => (this.dataSource = data));
       },
-      error: () => (this.status = 'Error deleting user!'),
+      error: () => {
+        this.status = 'Error deleting user!';
+        this.statusClass = 'alert alert-danger';
+      }
     });
   }
 
@@ -46,17 +51,19 @@ export class UsersComponent implements OnInit {
       name: this.name,
     };
 
-    this.dbService.addUser(user).subscribe({
-      next: () => {
+    this.dbService.addUser(user).pipe(
+      switchMap(() => this.dbService.getUsers())
+    ).subscribe({
+      next: (data) => {
+        this.dataSource = data;
         this.status = 'User added successfully.';
         this.statusClass = 'alert alert-success';
-        this.dbService.getUsers().subscribe((data) => (this.dataSource = data));
         this.isAdding = false;
       },
       error: (err) => {
-        this.status = err.error.error;
+        this.status = err.error?.error || 'Error adding user!';
         this.statusClass = 'alert alert-danger';
-      },
+      }
     });
   }
 
@@ -70,18 +77,19 @@ export class UsersComponent implements OnInit {
       name: name,
     };
 
-    this.dbService.editUser(user).subscribe({
-      next: () => {
+    this.dbService.editUser(user).pipe(
+      switchMap(() => this.dbService.getUsers())
+    ).subscribe({
+      next: (data) => {
+        this.dataSource = data;
         this.status = 'User edited successfully.';
         this.statusClass = 'alert alert-success';
-        this.dbService.getUsers().subscribe((data) => (this.dataSource = data));
-        this.isAdding = false;
         this.toggleEditUserForm(id);
       },
       error: (err) => {
-        this.status = err.error.error;
+        this.status = err.error.error || 'Error editing user!';
         this.statusClass = 'alert alert-danger';
-      },
+      }
     });
   }
 }
