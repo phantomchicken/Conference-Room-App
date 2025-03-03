@@ -33,6 +33,8 @@ import { EMPTY, switchMap } from 'rxjs';
   styleUrl: './reservations.component.css',
 })
 export class ReservationsComponent implements OnInit, AfterViewInit {
+  private dbService = inject(DatabaseService);
+
   displayedColumns: string[] = [
     'id',
     'name',
@@ -62,8 +64,6 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   private readonly _adapter = inject<DateAdapter<unknown, unknown>>(DateAdapter);
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  constructor(private dbService: DatabaseService) {}
 
   ngOnInit() {
     this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));

@@ -1,73 +1,72 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User, ConferenceRoom, Reservation, APIResponse } from './models';
+import { API_ROUTES } from './constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DatabaseService {
-  private API_URL = 'http://localhost:3000/';
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.API_URL + 'users');
+    return this.http.get<User[]>(API_ROUTES.users);
   }
 
   addUser(user: User): Observable<User> {
-    return this.http.post<User>(this.API_URL + 'users', user);
+    return this.http.post<User>(API_ROUTES.users, user);
   }
 
   editUser(user: User): Observable<User> {
-    return this.http.put<User>(`${this.API_URL}users/${user.id}`, user);
+    return this.http.put<User>(`${API_ROUTES.users}/${user.id}`, user);
   }
 
   deleteUser(id: number): Observable<APIResponse> {
-    return this.http.delete(this.API_URL + 'users/' + id);
+    return this.http.delete(`${API_ROUTES.users}/${id}`);
   }
 
   getReservations(): Observable<Reservation[]> {
-    return this.http.get<Reservation[]>(this.API_URL + 'reservations');
+    return this.http.get<Reservation[]>(API_ROUTES.reservations);
   }
 
   getReservation(id: number): Observable<Reservation> {
-    return this.http.get<Reservation>(`${this.API_URL}reservations/${id}`);
+    return this.http.get<Reservation>(`${API_ROUTES.reservations}/${id}`);
   }
 
   addReservation(reservation: Reservation): Observable<Reservation> {
-    return this.http.post<Reservation>(this.API_URL + 'reservations', reservation);
+    return this.http.post<Reservation>(API_ROUTES.reservations, reservation);
   }
 
   editReservation(reservation: Reservation): Observable<Reservation> {
-    return this.http.put<Reservation>(`${this.API_URL}reservations/${reservation.id}`, reservation);
+    return this.http.put<Reservation>(`${API_ROUTES.reservations}/${reservation.id}`, reservation);
   }
 
   deleteReservation(id: number): Observable<APIResponse> {
-    return this.http.delete(this.API_URL + 'reservations/' + id);
+    return this.http.delete(`${API_ROUTES.reservations}/${id}`);
   }
 
   getConferenceRooms(): Observable<ConferenceRoom[]> {
-    return this.http.get<ConferenceRoom[]>(this.API_URL + 'conference-rooms');
+    return this.http.get<ConferenceRoom[]>(API_ROUTES.conferenceRooms);
   }
 
   addConferenceRoom(conferenceRoom: ConferenceRoom): Observable<ConferenceRoom> {
-    return this.http.post<ConferenceRoom>(this.API_URL + 'conference-rooms', conferenceRoom);
+    return this.http.post<ConferenceRoom>(API_ROUTES.conferenceRooms, conferenceRoom);
   }
 
   editConferenceRoom(conferenceRoom: ConferenceRoom): Observable<ConferenceRoom> {
-    return this.http.put<ConferenceRoom>(`${this.API_URL}conference-rooms/${conferenceRoom.id}`, conferenceRoom);
+    return this.http.put<ConferenceRoom>(`${API_ROUTES.conferenceRooms}/${conferenceRoom.id}`, conferenceRoom);
   }
 
   deleteConferenceRoom(id: number): Observable<APIResponse> {
-    return this.http.delete(this.API_URL + 'conference-rooms/' + id);
+    return this.http.delete(`${API_ROUTES.conferenceRooms}/${id}`);
   }
 
   deleteAllData(): Observable<APIResponse> {
-    return this.http.delete(this.API_URL + 'admin/clear-data');
+    return this.http.delete(API_ROUTES.admin.clearData);
   }
 
   seedData(): Observable<APIResponse> {
-    return this.http.post(this.API_URL + 'admin/seed-data', {});
+    return this.http.post(API_ROUTES.admin.seedData, {});
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,8 @@ import { switchMap } from 'rxjs';
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit {
+  private dbService = inject(DatabaseService);
+
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
   dataSource: User[] = [];
   status = '';
@@ -19,8 +21,6 @@ export class UsersComponent implements OnInit {
   isAdding = false;
   name = '';
   isEditing = new Map<number, boolean>();
-
-  constructor(private dbService: DatabaseService) {}
 
   ngOnInit() {
     this.dbService.getUsers().subscribe((data) => (this.dataSource = data));

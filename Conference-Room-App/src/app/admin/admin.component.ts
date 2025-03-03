@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DatabaseService } from '../database.service'; // Import the DatabaseService to interact with backend
 import { CommonModule } from '@angular/common';
 
@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin.component.html',
 })
 export class AdminComponent {
+  private dbService = inject(DatabaseService);
+
   status = '';
   statusClass = '';
-
-  constructor(private dbService: DatabaseService) {}
 
   deleteData() {
     this.dbService.deleteAllData().subscribe({

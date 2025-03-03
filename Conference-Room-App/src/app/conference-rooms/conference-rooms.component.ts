@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,8 @@ import { switchMap } from 'rxjs/operators';
   templateUrl: './conference-rooms.component.html',
 })
 export class ConferenceRoomsComponent implements OnInit {
+  private dbService = inject(DatabaseService);
+  
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
   dataSource: ConferenceRoom[] = [];
   status = '';
@@ -19,8 +21,6 @@ export class ConferenceRoomsComponent implements OnInit {
   isAdding = false;
   name = '';
   isEditing = new Map<number, boolean>();
-
-  constructor(private dbService: DatabaseService) {}
 
   ngOnInit() {
     this.dbService.getConferenceRooms().subscribe((data) => (this.dataSource = data));
