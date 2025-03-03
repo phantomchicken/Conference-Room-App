@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { TemplateComponent } from './template/template.component';
 import {MatTableModule} from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import {MatTimepickerModule} from '@angular/material/timepicker';
@@ -10,7 +9,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { FormsModule } from '@angular/forms';
 import {MatNativeDateModule} from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-root',

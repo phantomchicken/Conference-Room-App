@@ -22,7 +22,7 @@ export class AdminComponent {
         this.status = 'Database cleared successfully!';
         this.statusClass = 'alert alert-success';
       },
-      error: (err) => {
+      error: () => {
         this.status = 'Error clearing database!';
         this.statusClass = 'alert alert-danger';
       }
@@ -35,7 +35,7 @@ export class AdminComponent {
         this.status = 'Database seeded successfully!';
         this.statusClass = 'alert alert-success';
       },
-      error: (err) => {
+      error: () => {
         this.status = 'Error seeding database!';
         this.statusClass = 'alert alert-danger';
       }

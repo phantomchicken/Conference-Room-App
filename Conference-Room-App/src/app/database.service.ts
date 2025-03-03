@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User, ConferenceRoom, Reservation } from './models';
+import { User, ConferenceRoom, Reservation, APIResponse } from './models';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class DatabaseService {
     return this.http.put<User>(`${this.API_URL}users/${user.id}`, user);
   }
 
-  deleteUser(id: number): Observable<any> {
+  deleteUser(id: number): Observable<APIResponse> {
     return this.http.delete(this.API_URL + 'users/' + id);
   }
 
@@ -43,7 +43,7 @@ export class DatabaseService {
     return this.http.put<Reservation>(`${this.API_URL}reservations/${reservation.id}`, reservation);
   }
 
-  deleteReservation(id: number): Observable<any> {
+  deleteReservation(id: number): Observable<APIResponse> {
     return this.http.delete(this.API_URL + 'reservations/' + id);
   }
 
@@ -59,15 +59,15 @@ export class DatabaseService {
     return this.http.put<ConferenceRoom>(`${this.API_URL}conference-rooms/${conferenceRoom.id}`, conferenceRoom);
   }
 
-  deleteConferenceRoom(id: number): Observable<any> {
+  deleteConferenceRoom(id: number): Observable<APIResponse> {
     return this.http.delete(this.API_URL + 'conference-rooms/' + id);
   }
 
-  deleteAllData(): Observable<any> {
+  deleteAllData(): Observable<APIResponse> {
     return this.http.delete(this.API_URL + 'admin/clear-data');
   }
 
-  seedData(): Observable<any> {
+  seedData(): Observable<APIResponse> {
     return this.http.post(this.API_URL + 'admin/seed-data', {});
   }
 }

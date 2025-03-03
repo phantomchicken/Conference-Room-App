@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../database.service';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
@@ -11,14 +11,14 @@ import { ConferenceRoom } from '../models';
   templateUrl: './conference-rooms.component.html',
   styleUrl: './conference-rooms.component.css'
 })
-export class ConferenceRoomsComponent {
+export class ConferenceRoomsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
   dataSource: ConferenceRoom[] = [];
   status = '';
   statusClass = '';
   isAdding = false;
-  name:string = '';
-  isEditing: Map<number, boolean> = new Map();
+  name = '';
+  isEditing = new Map<number, boolean>();
 
   constructor(private dbService: DatabaseService) {}
 
@@ -29,11 +29,11 @@ export class ConferenceRoomsComponent {
   deleteConferenceRoom(id:number){
     this.dbService.deleteConferenceRoom(id).subscribe({
       next: () => {
-        this.status = 'Conference room deleted successfully.',
-        this.statusClass = 'alert alert-success',
+        this.status = 'Conference room deleted successfully.'
+        this.statusClass = 'alert alert-success'
         this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
       }, 
-      error: (err) => this.status = 'Error deleting conference room!'
+      error: () => this.status = 'Error deleting conference room!'
     });
   }
 
@@ -48,13 +48,13 @@ export class ConferenceRoomsComponent {
 
     this.dbService.addConferenceRoom(conferenceRoom).subscribe({
       next: () => {
-        this.status = 'Conference room added successfully.',
-        this.statusClass = 'alert alert-success',
+        this.status = 'Conference room added successfully.'
+        this.statusClass = 'alert alert-success'
         this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
         this.isAdding = false
       }, 
       error: (err) => {
-        this.status = err.error.error,
+        this.status = err.error.error
         this.statusClass = 'alert alert-danger'
       }  
     });
@@ -72,14 +72,14 @@ export class ConferenceRoomsComponent {
 
     this.dbService.editConferenceRoom(conferenceRoom).subscribe({
       next: () => {
-        this.status = 'Conference room edited successfully.',
-        this.statusClass = 'alert alert-success',
+        this.status = 'Conference room edited successfully.'
+        this.statusClass = 'alert alert-success'
         this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
         this.isAdding = false
         this.toggleEditConferenceRoomForm(id)
       }, 
       error: (err) => {
-        this.status = err.error.error,
+        this.status = err.error.error
         this.statusClass = 'alert alert-danger'
       }  
     });

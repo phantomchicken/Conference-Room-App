@@ -55,8 +55,8 @@
             <ng-container matColumnDef="editDelete">
               <th mat-header-cell *matHeaderCellDef> Edit/Delete </th>
               <td mat-cell *matCellDef="let element">
-                <button *ngIf="isEditing.get(element.id)" class="btn btn-success bi bi-check-square m-2"  (click)="editReservation(element, element.name)"></button>
-                <button *ngIf="!isEditing.get(element.id)" class="btn btn-secondary m-2 bi bi-pen" (click)="toggleEditReservationForm(element.id)"></button>
+                <button *ngIf="isEditing.get(element.id)" class="btn btn-success bi bi-check-square m-2"  (click)="editReservation(element, element.name)" aria-label="Save changes"></button>
+                <button *ngIf="!isEditing.get(element.id)" class="btn btn-secondary m-2 bi bi-pen" (click)="toggleEditReservationForm(element.id)" aria-label="Edit"></button>
                 <button class="btn btn-danger" (click)="deleteReservation(element.id)">X</button>
               </td>
             </ng-container>

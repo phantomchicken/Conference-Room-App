@@ -16,4 +16,8 @@ export interface Reservation {
     startTime: Date;
     endTime: Date;
 }
-  
+
+export interface APIResponse {
+    message?: string;
+    error?: string;
+}

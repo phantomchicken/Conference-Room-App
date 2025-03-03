@@ -1,5 +1,5 @@
-import { Component, ViewChild, inject } from '@angular/core';
-import {MatTable, MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { Component, ViewChild, inject, OnInit, AfterViewInit } from '@angular/core';
+import { MatTableDataSource, MatTableModule} from '@angular/material/table';
 import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import {MatTimepickerModule} from '@angular/material/timepicker';
@@ -11,7 +11,7 @@ import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ConferenceRoom, Reservation, User } from '../models';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-reservations',
@@ -20,23 +20,22 @@ import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
   styleUrl: './reservations.component.css'
 })
 
-export class ReservationsComponent {
+export class ReservationsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['id', 'name', 'conferenceRoom', 'participants', 'date', 'startTime', 'endTime', 'editDelete'];
   dataSource = new MatTableDataSource<Reservation>();
   status = '';
   statusClass = '';
-  name: string = '';
-  formControl: any;
+  name = '';
   startDate: Date = new Date();
   startTime: Date = new Date();
   endTime: Date = new Date();
   isAdding = false;
-  isEditing: Map<number, boolean> = new Map();
+  isEditing = new Map<number, boolean>();
   
-  userList: any[] = [];
+  userList: User[] = [];
   selectedUsers: User[] = [];
 
-  conferenceRoomList: any[] = [];
+  conferenceRoomList: ConferenceRoom[] = [];
   selectedConferenceRoom: ConferenceRoom | null = null;
 
   private readonly _adapter = inject<DateAdapter<unknown, unknown>>(DateAdapter);
@@ -60,11 +59,11 @@ export class ReservationsComponent {
   deleteReservation(id:number){
     this.dbService.deleteReservation(id).subscribe({
       next: () => {
-        this.status = 'Reservation deleted successfully.',
-        this.statusClass = 'alert alert-success',
+        this.status = 'Reservation deleted successfully.'
+        this.statusClass = 'alert alert-success'
         this.dbService.getReservations().subscribe(data => this.dataSource.data = data)
       }, 
-      error: (err) => this.status = 'Error deleting reservation!'
+      error: () => this.status = 'Error deleting reservation!'
     });
   }
 
@@ -116,12 +115,12 @@ export class ReservationsComponent {
     
       this.dbService.addReservation(reservation).subscribe({
         next: () => {
-          this.status = 'Reservation added successfully.',
-          this.statusClass = 'alert alert-success',
+          this.status = 'Reservation added successfully.'
+          this.statusClass = 'alert alert-success'
           this.dbService.getReservations().subscribe(data => this.dataSource.data = data)
         },
-        error: (err) => {
-          this.status = 'Error adding reservation!',
+        error: () => {
+          this.status = 'Error adding reservation!'
           this.statusClass = 'alert alert-danger'
         }
       });

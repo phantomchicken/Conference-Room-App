@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {MatTableModule} from '@angular/material/table';
 import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
@@ -11,14 +11,14 @@ import { User } from '../models';
   templateUrl: './users.component.html',
   styleUrl: './users.component.css'
 })
-export class UsersComponent {
+export class UsersComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
   dataSource: User[] = [];
   status = '';
   statusClass = '';
   isAdding = false
-  name:string = '';
-  isEditing: Map<number, boolean> = new Map();
+  name = '';
+  isEditing = new Map<number, boolean>();
 
   constructor(private dbService: DatabaseService) {}
 
@@ -29,11 +29,11 @@ export class UsersComponent {
   deleteUser(id:number){
     this.dbService.deleteUser(id).subscribe({
       next: () => {
-        this.status = 'User deleted successfully.',
-        this.statusClass = 'alert alert-success',
+        this.status = 'User deleted successfully.'
+        this.statusClass = 'alert alert-success'
         this.dbService.getUsers().subscribe(data => this.dataSource = data)
       }, 
-      error: (err) => this.status = 'Error deleting user!'
+      error: () => this.status = 'Error deleting user!'
     });
   }
 
@@ -48,13 +48,13 @@ export class UsersComponent {
 
     this.dbService.addUser(user).subscribe({
       next: () => {
-        this.status = 'User added successfully.',
-        this.statusClass = 'alert alert-success',
+        this.status = 'User added successfully.'
+        this.statusClass = 'alert alert-success'
         this.dbService.getUsers().subscribe(data => this.dataSource = data)
         this.isAdding = false
       }, 
       error: (err) => {
-        this.status = err.error.error,
+        this.status = err.error.error
         this.statusClass = 'alert alert-danger'
       }  
     });
@@ -72,14 +72,14 @@ export class UsersComponent {
 
     this.dbService.editUser(user).subscribe({
       next: () => {
-        this.status = 'User edited successfully.',
-        this.statusClass = 'alert alert-success',
+        this.status = 'User edited successfully.'
+        this.statusClass = 'alert alert-success'
         this.dbService.getUsers().subscribe(data => this.dataSource = data)
         this.isAdding = false
         this.toggleEditUserForm(id)
       }, 
       error: (err) => {
-        this.status = err.error.error,
+        this.status = err.error.error
         this.statusClass = 'alert alert-danger'
       }  
     });
