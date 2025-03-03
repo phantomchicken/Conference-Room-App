@@ -77,6 +77,13 @@ Two simple mock unit tests were made. They test the functionalities of adding us
 ng test --no-watch
 ```
 
+## Formatting, Linting
+ESLint is utilized for linting, and Prettier for code formatting. Formatting settings can be changed to match one's preferences in `.prettierrc.json`.
+
+Run linter with `ng lint --fix`.
+
+Run formatter with `npx prettier --write .`.
+
 ## Examples
 
 ![](./screenshots/users.png)

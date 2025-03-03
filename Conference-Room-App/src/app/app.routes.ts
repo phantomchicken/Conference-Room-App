@@ -12,9 +12,9 @@ export const routes: Routes = [
     children: [
       { path: '', component: ReservationsComponent },
       { path: 'users', component: UsersComponent },
-      { path: 'reservations', component: ReservationsComponent},
-      { path: 'conference-rooms', component: ConferenceRoomsComponent},
-      { path: 'admin', component: AdminComponent}
-    ]
-  }
+      { path: 'reservations', component: ReservationsComponent },
+      { path: 'conference-rooms', component: ConferenceRoomsComponent },
+      { path: 'admin', component: AdminComponent },
+    ],
+  },
 ];

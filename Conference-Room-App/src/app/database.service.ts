@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { User, ConferenceRoom, Reservation, APIResponse } from './models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DatabaseService {
   private API_URL = 'http://localhost:3000/';
@@ -18,7 +18,7 @@ export class DatabaseService {
   addUser(user: User): Observable<User> {
     return this.http.post<User>(this.API_URL + 'users', user);
   }
-  
+
   editUser(user: User): Observable<User> {
     return this.http.put<User>(`${this.API_URL}users/${user.id}`, user);
   }
@@ -36,7 +36,7 @@ export class DatabaseService {
   }
 
   addReservation(reservation: Reservation): Observable<Reservation> {
-    return this.http.post<Reservation>(this.API_URL + 'reservations', reservation );
+    return this.http.post<Reservation>(this.API_URL + 'reservations', reservation);
   }
 
   editReservation(reservation: Reservation): Observable<Reservation> {

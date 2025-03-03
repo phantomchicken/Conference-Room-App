@@ -3,8 +3,8 @@ import { provideRouter } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { provideHttpClient } from '@angular/common/http';
-import {provideNativeDateAdapter} from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideRouter(routes), provideHttpClient(), provideNativeDateAdapter() ]
-}).catch(err => console.error(err));
+  providers: [provideRouter(routes), provideHttpClient(), provideNativeDateAdapter()],
+}).catch((err) => console.error(err));

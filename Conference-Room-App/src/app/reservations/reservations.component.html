@@ -1,146 +1,160 @@
 <div class="container">
-    <div class="row" *ngIf="dataSource.data.length">
-        <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+  <div class="row" *ngIf="dataSource.data.length">
+    <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+      </ng-container>
 
-            <!-- id Column -->
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
-              <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-            </ng-container>
-          
-            <!-- Name Column -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef> Name </th>
-              <td mat-cell *matCellDef="let element"> 
-                <div *ngIf="!isEditing.get(element.id)">
-                  {{element.name}}
-                </div>
-                <form *ngIf="isEditing.get(element.id)">
-                  <input type="text" class="form-control mb-2 w-50" name="name" [(ngModel)]="element.name" placeholder="Name">
-                </form>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="conferenceRoom">
-              <th mat-header-cell *matHeaderCellDef> Conference Room </th>
-              <td mat-cell *matCellDef="let element"> {{element.conferenceRoom?.name}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="participants">
-              <th mat-header-cell *matHeaderCellDef> Participants </th>
-              <td mat-cell *matCellDef="let element"> 
-                <div *ngFor="let participant of element.participants">
-                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="ID: {{participant.id}}">
-                    {{participant.name}}
-                  </span>
-                </div>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="date">
-              <th mat-header-cell *matHeaderCellDef> Date </th>
-              <td mat-cell *matCellDef="let element"> {{element.startTime | date:'dd/MM/yyyy'}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="startTime">
-              <th mat-header-cell *matHeaderCellDef> Start </th>
-              <td mat-cell *matCellDef="let element"> {{element.startTime | date:'HH:mm'}} </td>
-            </ng-container>
-
-            <ng-container matColumnDef="endTime">
-              <th mat-header-cell *matHeaderCellDef> End </th>
-              <td mat-cell *matCellDef="let element"> {{element.endTime | date:'HH:mm'}} </td>
-            </ng-container>
-          
-            <ng-container matColumnDef="editDelete">
-              <th mat-header-cell *matHeaderCellDef> Edit/Delete </th>
-              <td mat-cell *matCellDef="let element">
-                <button *ngIf="isEditing.get(element.id)" class="btn btn-success bi bi-check-square m-2"  (click)="editReservation(element, element.name)" aria-label="Save changes"></button>
-                <button *ngIf="!isEditing.get(element.id)" class="btn btn-secondary m-2 bi bi-pen" (click)="toggleEditReservationForm(element.id)" aria-label="Edit"></button>
-                <button class="btn btn-danger" (click)="deleteReservation(element.id)">X</button>
-              </td>
-            </ng-container>
-          
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <mat-paginator [length]="dataSource.data.length"
-              [pageSize]="10"
-              [pageSizeOptions]="[5, 10, 25, 100]"
-              aria-label="Select page">
-        </mat-paginator>
-    </div>
-    
-    <div class="row mt-4">
-      <div *ngIf="status">
-        <div [ngClass]="status ? statusClass :'alert alert-primary'" role="alert">
-          {{status}}
-        </div>
-      </div>      
-    </div>
-
-    <div class="row justify-content-center align-items-center mt-4">
-      <div class="col-4 justify-content-center align-items-center text-center">
-          <button *ngIf="!isAdding" class="btn btn-success" (click)="toggleAddReservationForm()">Add Reservation</button>
-          <button *ngIf="isAdding" class="btn btn-primary" (click)="toggleAddReservationForm()">Hide Form</button>
-          <form *ngIf="isAdding" (ngSubmit)="addReservation()" class="mt-4">
-            <mat-form-field>
-              <mat-label>Name</mat-label>
-              <input matInput [(ngModel)]="name" name="name">
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>Conference Room</mat-label>
-              <mat-select [(ngModel)]="selectedConferenceRoom" name="selectedConferenceRoom">
-                <mat-option *ngFor="let conferenceRoom of conferenceRoomList" [value]="conferenceRoom">
-                  {{ conferenceRoom.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>Participants</mat-label>
-              <mat-select multiple [(ngModel)]="selectedUsers" name="selectedUsers">
-                <mat-option *ngFor="let user of userList" [value]="user">
-                  <span data-bs-toggle="tooltip" data-bs-placement="top" title="ID: {{user.id}}">
-                    {{ user.name }}
-                  </span>             
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-            <mat-form-field>
-              <mat-label>Meeting Date</mat-label>
-              <input matInput [matDatepicker]="datepicker" [(ngModel)]="startDate" name="startDate">
-              <mat-datepicker #datepicker></mat-datepicker>
-              <mat-datepicker-toggle [for]="datepicker" matSuffix></mat-datepicker-toggle>
-            </mat-form-field>
-          
-            <mat-form-field>
-              <mat-label>Meeting Start</mat-label>
-              <input matInput
-                [matTimepicker]="startTimepicker"
-                [(ngModel)]="startTime"
-                [ngModelOptions]="{ updateOn: 'blur' }"
-                name="startTime">
-              <mat-timepicker #startTimepicker></mat-timepicker>
-              <mat-timepicker-toggle [for]="startTimepicker" matSuffix></mat-timepicker-toggle>
-            </mat-form-field>
-          
-            <mat-form-field>
-              <mat-label>Meeting End</mat-label>
-              <input matInput
-                [matTimepicker]="endTimepicker"
-                [(ngModel)]="endTime"
-                [ngModelOptions]="{ updateOn: 'blur' }"
-                name="endTime">
-              <mat-timepicker #endTimepicker></mat-timepicker>
-              <mat-timepicker-toggle [for]="endTimepicker" matSuffix></mat-timepicker-toggle>
-            </mat-form-field>
-
-            <button type="button" class="btn btn-success" (click)="addReservation()">Create Reservation</button>
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!isEditing.get(element.id)">
+            {{ element.name }}
+          </div>
+          <form *ngIf="isEditing.get(element.id)">
+            <input
+              type="text"
+              class="form-control mb-2 w-50"
+              name="name"
+              [(ngModel)]="element.name"
+              placeholder="Name" />
           </form>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="conferenceRoom">
+        <th mat-header-cell *matHeaderCellDef>Conference Room</th>
+        <td mat-cell *matCellDef="let element">{{ element.conferenceRoom?.name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="participants">
+        <th mat-header-cell *matHeaderCellDef>Participants</th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngFor="let participant of element.participants">
+            <span data-bs-toggle="tooltip" data-bs-placement="top" title="ID: {{ participant.id }}">
+              {{ participant.name }}
+            </span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">{{ element.startTime | date: "dd/MM/yyyy" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef>Start</th>
+        <td mat-cell *matCellDef="let element">{{ element.startTime | date: "HH:mm" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="endTime">
+        <th mat-header-cell *matHeaderCellDef>End</th>
+        <td mat-cell *matCellDef="let element">{{ element.endTime | date: "HH:mm" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="editDelete">
+        <th mat-header-cell *matHeaderCellDef>Edit/Delete</th>
+        <td mat-cell *matCellDef="let element">
+          <button
+            *ngIf="isEditing.get(element.id)"
+            class="btn btn-success bi bi-check-square m-2"
+            (click)="editReservation(element, element.name)"
+            aria-label="Save changes"></button>
+          <button
+            *ngIf="!isEditing.get(element.id)"
+            class="btn btn-secondary m-2 bi bi-pen"
+            (click)="toggleEditReservationForm(element.id)"
+            aria-label="Edit"></button>
+          <button class="btn btn-danger" (click)="deleteReservation(element.id)">X</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator
+      [length]="dataSource.data.length"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page">
+    </mat-paginator>
+  </div>
+
+  <div class="row mt-4">
+    <div *ngIf="status">
+      <div [ngClass]="status ? statusClass : 'alert alert-primary'" role="alert">
+        {{ status }}
       </div>
     </div>
-</div>
+  </div>
 
+  <div class="row justify-content-center align-items-center mt-4">
+    <div class="col-4 justify-content-center align-items-center text-center">
+      <button *ngIf="!isAdding" class="btn btn-success" (click)="toggleAddReservationForm()">Add Reservation</button>
+      <button *ngIf="isAdding" class="btn btn-primary" (click)="toggleAddReservationForm()">Hide Form</button>
+      <form *ngIf="isAdding" (ngSubmit)="addReservation()" class="mt-4">
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput [(ngModel)]="name" name="name" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Conference Room</mat-label>
+          <mat-select [(ngModel)]="selectedConferenceRoom" name="selectedConferenceRoom">
+            <mat-option *ngFor="let conferenceRoom of conferenceRoomList" [value]="conferenceRoom">
+              {{ conferenceRoom.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Participants</mat-label>
+          <mat-select multiple [(ngModel)]="selectedUsers" name="selectedUsers">
+            <mat-option *ngFor="let user of userList" [value]="user">
+              <span data-bs-toggle="tooltip" data-bs-placement="top" title="ID: {{ user.id }}">
+                {{ user.name }}
+              </span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Meeting Date</mat-label>
+          <input matInput [matDatepicker]="datepicker" [(ngModel)]="startDate" name="startDate" />
+          <mat-datepicker #datepicker></mat-datepicker>
+          <mat-datepicker-toggle [for]="datepicker" matSuffix></mat-datepicker-toggle>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Meeting Start</mat-label>
+          <input
+            matInput
+            [matTimepicker]="startTimepicker"
+            [(ngModel)]="startTime"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            name="startTime" />
+          <mat-timepicker #startTimepicker></mat-timepicker>
+          <mat-timepicker-toggle [for]="startTimepicker" matSuffix></mat-timepicker-toggle>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Meeting End</mat-label>
+          <input
+            matInput
+            [matTimepicker]="endTimepicker"
+            [(ngModel)]="endTime"
+            [ngModelOptions]="{ updateOn: 'blur' }"
+            name="endTime" />
+          <mat-timepicker #endTimepicker></mat-timepicker>
+          <mat-timepicker-toggle [for]="endTimepicker" matSuffix></mat-timepicker-toggle>
+        </mat-form-field>
+
+        <button type="button" class="btn btn-success" (click)="addReservation()">Create Reservation</button>
+      </form>
+    </div>
+  </div>
+</div>

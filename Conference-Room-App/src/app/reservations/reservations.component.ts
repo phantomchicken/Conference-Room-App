@@ -1,27 +1,47 @@
 import { Component, ViewChild, inject, OnInit, AfterViewInit } from '@angular/core';
-import { MatTableDataSource, MatTableModule} from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
-import {MatTimepickerModule} from '@angular/material/timepicker';
-import {MatFormFieldModule } from '@angular/material/form-field';
-import {MatInputModule} from '@angular/material/input';
+import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {DateAdapter, MatNativeDateModule} from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DateAdapter, MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { ConferenceRoom, Reservation, User } from '../models';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-reservations',
-  imports: [MatSortModule, MatPaginatorModule, MatTableModule, CommonModule, MatTimepickerModule, MatFormFieldModule, MatInputModule, FormsModule, MatDatepickerModule, MatNativeDateModule, MatSelectModule],
+  imports: [
+    MatSortModule,
+    MatPaginatorModule,
+    MatTableModule,
+    CommonModule,
+    MatTimepickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+  ],
   templateUrl: './reservations.component.html',
-  styleUrl: './reservations.component.css'
+  styleUrl: './reservations.component.css',
 })
-
 export class ReservationsComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = ['id', 'name', 'conferenceRoom', 'participants', 'date', 'startTime', 'endTime', 'editDelete'];
+  displayedColumns: string[] = [
+    'id',
+    'name',
+    'conferenceRoom',
+    'participants',
+    'date',
+    'startTime',
+    'endTime',
+    'editDelete',
+  ];
   dataSource = new MatTableDataSource<Reservation>();
   status = '';
   statusClass = '';
@@ -31,7 +51,7 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   endTime: Date = new Date();
   isAdding = false;
   isEditing = new Map<number, boolean>();
-  
+
   userList: User[] = [];
   selectedUsers: User[] = [];
 
@@ -45,9 +65,9 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit() {
-    this.dbService.getReservations().subscribe(data => this.dataSource.data = data);
-    this.dbService.getUsers().subscribe(data => this.userList = data);
-    this.dbService.getConferenceRooms().subscribe(data => this.conferenceRoomList = data);
+    this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));
+    this.dbService.getUsers().subscribe((data) => (this.userList = data));
+    this.dbService.getConferenceRooms().subscribe((data) => (this.conferenceRoomList = data));
     this._adapter.setLocale('sl-SI');
   }
 
@@ -56,19 +76,27 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  deleteReservation(id:number){
+  deleteReservation(id: number) {
     this.dbService.deleteReservation(id).subscribe({
       next: () => {
-        this.status = 'Reservation deleted successfully.'
-        this.statusClass = 'alert alert-success'
-        this.dbService.getReservations().subscribe(data => this.dataSource.data = data)
-      }, 
-      error: () => this.status = 'Error deleting reservation!'
+        this.status = 'Reservation deleted successfully.';
+        this.statusClass = 'alert alert-success';
+        this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));
+      },
+      error: () => (this.status = 'Error deleting reservation!'),
     });
   }
 
   addReservation() {
-    if (!this.name || !this.selectedConferenceRoom || this.selectedConferenceRoom.id === null || !this.selectedUsers.length || !this.startDate || !this.startTime || !this.endTime) {
+    if (
+      !this.name ||
+      !this.selectedConferenceRoom ||
+      this.selectedConferenceRoom.id === null ||
+      !this.selectedUsers.length ||
+      !this.startDate ||
+      !this.startTime ||
+      !this.endTime
+    ) {
       this.status = 'Please fill in all fields.';
       this.statusClass = 'alert alert-danger';
       return;
@@ -91,38 +119,40 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.dbService.getReservations().subscribe(data => {
-      const existingReservations = data.filter(reservation => reservation.conferenceRoomId === this.selectedConferenceRoom!.id);
+    this.dbService.getReservations().subscribe((data) => {
+      const existingReservations = data.filter(
+        (reservation) => reservation.conferenceRoomId === this.selectedConferenceRoom!.id
+      );
 
       for (const reservation of existingReservations) {
         const existingStart = new Date(reservation.startTime);
         const existingEnd = new Date(reservation.endTime);
-      
+
         if (startDateTime < existingEnd && endDateTime > existingStart) {
           this.status = 'Reservation overlaps with another reservation.';
           this.statusClass = 'alert alert-danger';
           return;
         }
-      }   
+      }
 
       const reservation: Reservation = {
         name: this.name,
         conferenceRoomId: this.selectedConferenceRoom!.id!,
-        participantIds: this.selectedUsers.map(user => user.id!),
+        participantIds: this.selectedUsers.map((user) => user.id!),
         startTime: startDateTime,
-        endTime: endDateTime
+        endTime: endDateTime,
       };
-    
+
       this.dbService.addReservation(reservation).subscribe({
         next: () => {
-          this.status = 'Reservation added successfully.'
-          this.statusClass = 'alert alert-success'
-          this.dbService.getReservations().subscribe(data => this.dataSource.data = data)
+          this.status = 'Reservation added successfully.';
+          this.statusClass = 'alert alert-success';
+          this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));
         },
         error: () => {
-          this.status = 'Error adding reservation!'
-          this.statusClass = 'alert alert-danger'
-        }
+          this.status = 'Error adding reservation!';
+          this.statusClass = 'alert alert-danger';
+        },
       });
     });
   }
@@ -132,10 +162,10 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   }
 
   toggleEditReservationForm(id: number) {
-    this.isEditing.set(id, !this.isEditing.get(id))
+    this.isEditing.set(id, !this.isEditing.get(id));
   }
 
-  editReservation(reservation:Reservation, name: string) {
+  editReservation(reservation: Reservation, name: string) {
     const updatedReservation: Reservation = {
       ...reservation,
       name: name,
@@ -145,17 +175,14 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
       next: () => {
         this.status = 'Reservation edited successfully.';
         this.statusClass = 'alert alert-success';
-        this.dbService.getReservations().subscribe(data => this.dataSource.data = data);
+        this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));
         this.isAdding = false;
         this.toggleEditReservationForm(reservation.id!);
       },
       error: (err) => {
         this.status = err.error.error;
         this.statusClass = 'alert alert-danger';
-      }
+      },
     });
-
-    
   }
-
 }

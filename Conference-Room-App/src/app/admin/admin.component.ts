@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
-import { DatabaseService } from '../database.service';  // Import the DatabaseService to interact with backend
+import { DatabaseService } from '../database.service'; // Import the DatabaseService to interact with backend
 import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-admin',
   imports: [CommonModule],
   templateUrl: './admin.component.html',
-  styleUrl: './admin.component.css'
+  styleUrl: './admin.component.css',
 })
-
 export class AdminComponent {
   status = '';
   statusClass = '';
@@ -25,7 +23,7 @@ export class AdminComponent {
       error: () => {
         this.status = 'Error clearing database!';
         this.statusClass = 'alert alert-danger';
-      }
+      },
     });
   }
 
@@ -38,8 +36,7 @@ export class AdminComponent {
       error: () => {
         this.status = 'Error seeding database!';
         this.statusClass = 'alert alert-danger';
-      }
+      },
     });
   }
-
 }

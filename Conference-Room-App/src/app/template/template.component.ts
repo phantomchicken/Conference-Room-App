@@ -7,6 +7,6 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule, RouterOutlet, RouterModule], // Import RouterOutlet
   templateUrl: './template.component.html',
-  styleUrls: ['./template.component.css']
+  styleUrls: ['./template.component.css'],
 })
-export class TemplateComponent { }
+export class TemplateComponent {}

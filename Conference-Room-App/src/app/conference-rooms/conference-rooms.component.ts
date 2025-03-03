@@ -9,7 +9,7 @@ import { ConferenceRoom } from '../models';
   selector: 'app-conference-rooms',
   imports: [MatTableModule, CommonModule, FormsModule],
   templateUrl: './conference-rooms.component.html',
-  styleUrl: './conference-rooms.component.css'
+  styleUrl: './conference-rooms.component.css',
 })
 export class ConferenceRoomsComponent implements OnInit {
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
@@ -23,17 +23,17 @@ export class ConferenceRoomsComponent implements OnInit {
   constructor(private dbService: DatabaseService) {}
 
   ngOnInit() {
-    this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data);
+    this.dbService.getConferenceRooms().subscribe((data) => (this.dataSource = data));
   }
 
-  deleteConferenceRoom(id:number){
+  deleteConferenceRoom(id: number) {
     this.dbService.deleteConferenceRoom(id).subscribe({
       next: () => {
-        this.status = 'Conference room deleted successfully.'
-        this.statusClass = 'alert alert-success'
-        this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
-      }, 
-      error: () => this.status = 'Error deleting conference room!'
+        this.status = 'Conference room deleted successfully.';
+        this.statusClass = 'alert alert-success';
+        this.dbService.getConferenceRooms().subscribe((data) => (this.dataSource = data));
+      },
+      error: () => (this.status = 'Error deleting conference room!'),
     });
   }
 
@@ -41,30 +41,30 @@ export class ConferenceRoomsComponent implements OnInit {
     this.isAdding = !this.isAdding;
   }
 
-  addConferenceRoom(){
+  addConferenceRoom() {
     const conferenceRoom: ConferenceRoom = {
       name: this.name,
     };
 
     this.dbService.addConferenceRoom(conferenceRoom).subscribe({
       next: () => {
-        this.status = 'Conference room added successfully.'
-        this.statusClass = 'alert alert-success'
-        this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
-        this.isAdding = false
-      }, 
+        this.status = 'Conference room added successfully.';
+        this.statusClass = 'alert alert-success';
+        this.dbService.getConferenceRooms().subscribe((data) => (this.dataSource = data));
+        this.isAdding = false;
+      },
       error: (err) => {
-        this.status = err.error.error
-        this.statusClass = 'alert alert-danger'
-      }  
+        this.status = err.error.error;
+        this.statusClass = 'alert alert-danger';
+      },
     });
   }
 
-  toggleEditConferenceRoomForm(id:number) {
-    this.isEditing.set(id, !this.isEditing.get(id))
+  toggleEditConferenceRoomForm(id: number) {
+    this.isEditing.set(id, !this.isEditing.get(id));
   }
 
-  editUser(id:number, name:string){
+  editUser(id: number, name: string) {
     const conferenceRoom: ConferenceRoom = {
       id: id,
       name: name,
@@ -72,16 +72,16 @@ export class ConferenceRoomsComponent implements OnInit {
 
     this.dbService.editConferenceRoom(conferenceRoom).subscribe({
       next: () => {
-        this.status = 'Conference room edited successfully.'
-        this.statusClass = 'alert alert-success'
-        this.dbService.getConferenceRooms().subscribe(data => this.dataSource = data)
-        this.isAdding = false
-        this.toggleEditConferenceRoomForm(id)
-      }, 
+        this.status = 'Conference room edited successfully.';
+        this.statusClass = 'alert alert-success';
+        this.dbService.getConferenceRooms().subscribe((data) => (this.dataSource = data));
+        this.isAdding = false;
+        this.toggleEditConferenceRoomForm(id);
+      },
       error: (err) => {
-        this.status = err.error.error
-        this.statusClass = 'alert alert-danger'
-      }  
+        this.status = err.error.error;
+        this.statusClass = 'alert alert-danger';
+      },
     });
   }
 }
