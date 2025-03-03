@@ -1,9 +1,50 @@
-
 const { PrismaClient } = require('@prisma/client');
 const express = require('express');
 const app = express();
 const prisma = new PrismaClient();
 
+/**
+ * @swagger
+ * /reservations:
+ *   get:
+ *     summary: Get a list of reservations
+ *     tags:
+ *     - reservations
+ *     responses:
+ *       200:
+ *         description: A list of reservations
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   name:
+ *                     type: string
+ *                   startTime:
+ *                     type: string
+ *                   endTime:
+ *                     type: string
+ *                   conferenceRoom:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ *                   participants:
+ *                     type: array
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                         name:
+ *                           type: string
+ */
 app.get('/reservations', async (req, res) => {
     const reservations = await prisma.reservation.findMany({
         include: { participants: true, conferenceRoom: true }
@@ -11,6 +52,52 @@ app.get('/reservations', async (req, res) => {
     res.status(200).json(reservations);
 });
 
+/**
+ * @swagger
+ * /reservations/{id}:
+ *   get:
+ *     summary: Get a specific reservation by ID
+ *     tags:
+ *     - reservations
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A reservation object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 startTime:
+ *                   type: string
+ *                 endTime:
+ *                   type: string
+ *                 conferenceRoom:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                 participants:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ */
 app.get('/reservations/:id', async (req, res) => {
     const { id } = req.params;
     const reservation = await prisma.reservation.findUnique({
@@ -18,8 +105,69 @@ app.get('/reservations/:id', async (req, res) => {
         include: { participants: true, conferenceRoom: true }
     });
     res.status(200).json(reservation);
-})
+});
 
+/**
+ * @swagger
+ * /reservations:
+ *   post:
+ *     summary: Create a new reservation
+ *     tags:
+ *     - reservations
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               conferenceRoomId:
+ *                 type: integer
+ *               participantIds:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *               startTime:
+ *                 type: string
+ *                 format: date-time
+ *               endTime:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       201:
+ *         description: Reservation created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 startTime:
+ *                   type: string
+ *                 endTime:
+ *                   type: string
+ *                 conferenceRoom:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                 participants:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ */
 app.post('/reservations', async (req, res) => {
     const { name, conferenceRoomId, participantIds, startTime, endTime } = req.body;
 
@@ -40,6 +188,61 @@ app.post('/reservations', async (req, res) => {
     res.status(201).json(reservation);
 });
 
+/**
+ * @swagger
+ * /reservations/{id}:
+ *   put:
+ *     summary: Update a reservation by ID
+ *     tags:
+ *     - reservations
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Reservation updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 name:
+ *                   type: string
+ *                 startTime:
+ *                   type: string
+ *                 endTime:
+ *                   type: string
+ *                 conferenceRoom:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     name:
+ *                       type: string
+ *                 participants:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       name:
+ *                         type: string
+ */
 app.put('/reservations/:id', async (req, res) => {
     const { id } = req.params;
     const { name } = req.body;
@@ -61,6 +264,8 @@ app.put('/reservations/:id', async (req, res) => {
  * /reservations/{id}:
  *   delete:
  *     summary: Delete a reservation
+ *     tags:
+ *     - reservations
  *     parameters:
  *       - in: path
  *         name: id

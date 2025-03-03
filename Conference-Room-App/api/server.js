@@ -19,5 +19,5 @@ app.use('/', databaseRoutes)
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Start server
-app.listen(3000, () => console.log('Server running on http://localhost:3000'));
+app.listen(3000, () => console.log('Server running on http://localhost:3000. Docs available on http://localhost:3000/docs'));
 module.exports = app;

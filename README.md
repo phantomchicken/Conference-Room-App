@@ -27,6 +27,13 @@ The Angular frontend runs on http://localhost:4200 by default, while the REST AP
 - http://localhost:3000/conference-rooms/:id
 - http://localhost:3000/reservations/:id
 
+`POST`, `DELETE`:
+- http://localhost:3000//admin/seed-data
+- http://localhost:3000//admin/clear-data
+
+**OpenAPI documentation** is displayed via Swagger UI on http://localhost:3000/docs. Here you can test API calls, see the schema and examples, expected values etc.
+The documentation is enabled by default by running the API itself with `node server.js`.
+
 ## Setup
 
 Make sure you have at least Node v18.13.
