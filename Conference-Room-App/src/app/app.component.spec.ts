@@ -1,23 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { DatabaseService } from './database.service';
 import { UsersComponent } from './users/users.component';
 import { of } from 'rxjs';
 import { ConferenceRoomsComponent } from './conference-rooms/conference-rooms.component';
+import { UsersService } from './services/users.service';
+import { ConferenceRoomsService } from './services/conference-rooms.service';
 
 describe('UsersComponent', () => {
   let component: UsersComponent;
   let fixture: ComponentFixture<UsersComponent>;
-  let mockDbService: jasmine.SpyObj<DatabaseService>;
+  let mockDbService: jasmine.SpyObj<UsersService>;
 
   beforeEach(async () => {
-    mockDbService = jasmine.createSpyObj('DatabaseService', ['getUsers', 'addUser']);
+    mockDbService = jasmine.createSpyObj('UsersService', ['getUsers', 'addUser']);
     mockDbService.addUser.and.returnValue(of({ id: 1, name: 'Test User' }));
     mockDbService.getUsers.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [UsersComponent, HttpClientTestingModule],
-      providers: [{ provide: DatabaseService, useValue: mockDbService }],
+      providers: [{ provide: UsersService, useValue: mockDbService }],
     }).compileComponents();
   });
 
@@ -40,16 +41,16 @@ describe('UsersComponent', () => {
 describe('ConferenceRoomsComponent', () => {
   let component: ConferenceRoomsComponent;
   let fixture: ComponentFixture<ConferenceRoomsComponent>;
-  let mockDbService: jasmine.SpyObj<DatabaseService>;
+  let mockDbService: jasmine.SpyObj<ConferenceRoomsService>;
 
   beforeEach(async () => {
-    mockDbService = jasmine.createSpyObj('DatabaseService', ['getConferenceRooms', 'addConferenceRoom']);
+    mockDbService = jasmine.createSpyObj('ConferenceRoomsService', ['getConferenceRooms', 'addConferenceRoom']);
     mockDbService.addConferenceRoom.and.returnValue(of({ id: 1, name: 'Test Conference Room' }));
     mockDbService.getConferenceRooms.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [ConferenceRoomsComponent, HttpClientTestingModule],
-      providers: [{ provide: DatabaseService, useValue: mockDbService }],
+      providers: [{ provide: ConferenceRoomsService, useValue: mockDbService }],
     }).compileComponents();
   });
 

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { DatabaseService } from '../database.service'; // Import the DatabaseService to interact with backend
+import { DatabaseService } from '../services/database.service'; // Import the DatabaseService to interact with backend
 import { CommonModule } from '@angular/common';
 
 @Component({

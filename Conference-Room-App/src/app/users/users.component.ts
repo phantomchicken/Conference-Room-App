@@ -1,10 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User } from '../models';
 import { switchMap } from 'rxjs';
+import { UsersService } from '../services/users.service';
 
 @Component({
   selector: 'app-users',
@@ -12,7 +12,7 @@ import { switchMap } from 'rxjs';
   templateUrl: './users.component.html',
 })
 export class UsersComponent implements OnInit {
-  private dbService = inject(DatabaseService);
+  private usersService = inject(UsersService);
 
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
   dataSource: User[] = [];
@@ -23,12 +23,12 @@ export class UsersComponent implements OnInit {
   isEditing = new Map<number, boolean>();
 
   ngOnInit() {
-    this.dbService.getUsers().subscribe((data) => (this.dataSource = data));
+    this.usersService.getUsers().subscribe((data) => (this.dataSource = data));
   }
 
   deleteUser(id: number) {
-    this.dbService.deleteUser(id).pipe(
-      switchMap(() => this.dbService.getUsers())
+    this.usersService.deleteUser(id).pipe(
+      switchMap(() => this.usersService.getUsers())
     ).subscribe({
       next: (data) => {
         this.dataSource = data;
@@ -51,8 +51,8 @@ export class UsersComponent implements OnInit {
       name: this.name,
     };
 
-    this.dbService.addUser(user).pipe(
-      switchMap(() => this.dbService.getUsers())
+    this.usersService.addUser(user).pipe(
+      switchMap(() => this.usersService.getUsers())
     ).subscribe({
       next: (data) => {
         this.dataSource = data;
@@ -77,8 +77,8 @@ export class UsersComponent implements OnInit {
       name: name,
     };
 
-    this.dbService.editUser(user).pipe(
-      switchMap(() => this.dbService.getUsers())
+    this.usersService.editUser(user).pipe(
+      switchMap(() => this.usersService.getUsers())
     ).subscribe({
       next: (data) => {
         this.dataSource = data;

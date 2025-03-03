@@ -1,10 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { DatabaseService } from '../database.service';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConferenceRoom } from '../models';
 import { switchMap } from 'rxjs/operators';
+import { ConferenceRoomsService } from '../services/conference-rooms.service';
 
 @Component({
   selector: 'app-conference-rooms',
@@ -12,7 +12,7 @@ import { switchMap } from 'rxjs/operators';
   templateUrl: './conference-rooms.component.html',
 })
 export class ConferenceRoomsComponent implements OnInit {
-  private dbService = inject(DatabaseService);
+  private conferenceRoomsService = inject(ConferenceRoomsService);
   
   displayedColumns: string[] = ['id', 'name', 'editDelete'];
   dataSource: ConferenceRoom[] = [];
@@ -23,12 +23,12 @@ export class ConferenceRoomsComponent implements OnInit {
   isEditing = new Map<number, boolean>();
 
   ngOnInit() {
-    this.dbService.getConferenceRooms().subscribe((data) => (this.dataSource = data));
+    this.conferenceRoomsService.getConferenceRooms().subscribe((data) => (this.dataSource = data));
   }
 
   deleteConferenceRoom(id: number) {
-    this.dbService.deleteConferenceRoom(id).pipe(
-      switchMap(() => this.dbService.getConferenceRooms())
+    this.conferenceRoomsService.deleteConferenceRoom(id).pipe(
+      switchMap(() => this.conferenceRoomsService.getConferenceRooms())
     ).subscribe({
       next: (data) => {
         this.dataSource = data;
@@ -51,8 +51,8 @@ export class ConferenceRoomsComponent implements OnInit {
       name: this.name,
     };
 
-    this.dbService.addConferenceRoom(conferenceRoom).pipe(
-      switchMap(() => this.dbService.getConferenceRooms())
+    this.conferenceRoomsService.addConferenceRoom(conferenceRoom).pipe(
+      switchMap(() => this.conferenceRoomsService.getConferenceRooms())
     ).subscribe({
       next: (data) => {
         this.dataSource = data;
@@ -77,8 +77,8 @@ export class ConferenceRoomsComponent implements OnInit {
       name: name,
     };
 
-    this.dbService.editConferenceRoom(conferenceRoom).pipe(
-      switchMap(() => this.dbService.getConferenceRooms())
+    this.conferenceRoomsService.editConferenceRoom(conferenceRoom).pipe(
+      switchMap(() => this.conferenceRoomsService.getConferenceRooms())
     ).subscribe({
       next: (data) => {
         this.dataSource = data;

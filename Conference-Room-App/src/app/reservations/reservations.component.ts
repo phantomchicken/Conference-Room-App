@@ -1,6 +1,5 @@
 import { Component, ViewChild, inject, OnInit, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { DatabaseService } from '../database.service';
 import { CommonModule } from '@angular/common';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,6 +12,9 @@ import { ConferenceRoom, Reservation, User } from '../models';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { EMPTY, switchMap } from 'rxjs';
+import { ReservationsService } from '../services/reservations.service';
+import { ConferenceRoomsService } from '../services/conference-rooms.service';
+import { UsersService } from '../services/users.service';
 
 @Component({
   selector: 'app-reservations',
@@ -33,7 +35,9 @@ import { EMPTY, switchMap } from 'rxjs';
   styleUrl: './reservations.component.css',
 })
 export class ReservationsComponent implements OnInit, AfterViewInit {
-  private dbService = inject(DatabaseService);
+  private reservationsService = inject(ReservationsService);
+  private conferenceRoomsService = inject(ConferenceRoomsService);
+  private usersService = inject(UsersService);
 
   displayedColumns: string[] = [
     'id',
@@ -66,9 +70,12 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit() {
-    this.dbService.getReservations().subscribe((data) => (this.dataSource.data = data));
-    this.dbService.getUsers().subscribe((data) => (this.userList = data));
-    this.dbService.getConferenceRooms().subscribe((data) => (this.conferenceRoomList = data));
+    this.reservationsService.getReservations().subscribe((data) => {
+      this.dataSource.data = data
+      console.log(data)
+    });
+    this.usersService.getUsers().subscribe((data) => (this.userList = data));
+    this.conferenceRoomsService.getConferenceRooms().subscribe((data) => (this.conferenceRoomList = data));
     this._adapter.setLocale('sl-SI');
   }
 
@@ -78,8 +85,8 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
   }
 
   deleteReservation(id: number) {
-    this.dbService.deleteReservation(id).pipe(
-      switchMap(() => this.dbService.getReservations())
+    this.reservationsService.deleteReservation(id).pipe(
+      switchMap(() => this.reservationsService.getReservations())
     ).subscribe({
       next: (data) => {
         this.dataSource.data = data;
@@ -125,7 +132,7 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.dbService.getReservations().pipe(
+    this.reservationsService.getReservations().pipe(
       switchMap((data) => {
         const existingReservations = data.filter(
           (reservation) => reservation.conferenceRoomId === this.selectedConferenceRoom!.id
@@ -150,8 +157,8 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
           endTime: endDateTime,
         };
     
-        return this.dbService.addReservation(reservation).pipe(
-          switchMap(() => this.dbService.getReservations())
+        return this.reservationsService.addReservation(reservation).pipe(
+          switchMap(() => this.reservationsService.getReservations())
         );
       })
     ).subscribe({
@@ -181,8 +188,8 @@ export class ReservationsComponent implements OnInit, AfterViewInit {
       name: name,
     };
 
-    this.dbService.editReservation(updatedReservation).pipe(
-      switchMap(() => this.dbService.getReservations())
+    this.reservationsService.editReservation(updatedReservation).pipe(
+      switchMap(() => this.reservationsService.getReservations())
     ).subscribe({
       next: (data) => {
         this.dataSource.data = data;
